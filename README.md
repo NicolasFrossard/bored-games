@@ -1,1 +1,1 @@
-You bored? Here are some games.
+# Bored games

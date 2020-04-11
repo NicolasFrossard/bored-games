@@ -8,16 +8,12 @@ const gameState: any = {
 const app = express();
 app.set("port", process.env.PORT || 3000);
 
-app.get("/index.js", (req: any, res: any) => {
-    res.sendFile(path.resolve("./dist/client/index.js"));
-});
-
 let http = require("http").Server(app);
 // set up socket.io and bind it to our
 // http server.
 let io = require("socket.io")(http);
 
-app.use(express.static("public"));
+app.use(express.static("dist"));
 
 io.on('connection', (socket: Socket) => {
     console.log('a user connected:', socket.id);
@@ -28,8 +24,8 @@ io.on('connection', (socket: Socket) => {
     });
 
     socket.on("message", function(message: any) {
-        console.log(message);
-        socket.emit("message", "I got this from you: " + message);
+        console.log(`From socket ${socket.id} I received ${message}`);
+        socket.emit("message", `You are ${socket.id} and I got this from you: ${message}`);
     });
 
     socket.on('newPlayer', () => {
