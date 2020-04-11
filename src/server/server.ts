@@ -1,6 +1,6 @@
 import * as express from "express";
-import * as socketio from "socket.io";
 import * as path from "path";
+import {Socket} from "socket.io";
 const gameState: any = {
     players: {}
 };
@@ -19,7 +19,7 @@ let io = require("socket.io")(http);
 
 app.use(express.static("public"));
 
-io.on('connection', (socket: any) => {
+io.on('connection', (socket: Socket) => {
     console.log('a user connected:', socket.id);
 
     socket.on('disconnect', function() {
