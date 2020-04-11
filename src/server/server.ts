@@ -8,6 +8,10 @@ const gameState: any = {
 const app = express();
 app.set("port", process.env.PORT || 3000);
 
+app.get("/index.js", (req: any, res: any) => {
+    res.sendFile(path.resolve("./dist/client/index.js"));
+});
+
 let http = require("http").Server(app);
 // set up socket.io and bind it to our
 // http server.

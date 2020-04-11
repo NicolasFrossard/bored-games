@@ -1,5 +1,7 @@
-const socket = io();
-socket.on("message", function(data) {
+// @ts-ignore
+const socket : any = io();
+
+socket.on("message", function(data: any) {
     console.log('received from server: ' + data);
 });
 
@@ -7,11 +9,11 @@ function sendMsg() {
     socket.emit("message", "HELLO WORLD");
 }
 
-const canvas = document.getElementById('myCanvas');
+const canvas: any = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
 socket.emit('newPlayer');
 
-const drawPlayer = (player) => {
+const drawPlayer = (player: any) => {
     ctx.beginPath();
     ctx.rect(player.x, player.y, player.width, player.height);
     ctx.fillStyle = '#0095DD';
@@ -19,7 +21,7 @@ const drawPlayer = (player) => {
     ctx.closePath();
 };
 
-socket.on('state', (gameState) => {
+socket.on('state', (gameState: any) => {
     for (let player in gameState.players) {
         drawPlayer(gameState.players[player])
     }
@@ -31,7 +33,7 @@ const playerMovement = {
     left: false,
     right: false
 };
-const keyDownHandler = (e) => {
+const keyDownHandler = (e: any) => {
     if (e.keyCode === 39) {
         playerMovement.right = true;
     } else if (e.keyCode === 37) {
@@ -42,7 +44,7 @@ const keyDownHandler = (e) => {
         playerMovement.down = true;
     }
 };
-const keyUpHandler = (e) => {
+const keyUpHandler = (e: any) => {
     if (e.keyCode === 39) {
         playerMovement.right = false;
     } else if (e.keyCode === 37) {
