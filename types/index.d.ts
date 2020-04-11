@@ -1,3 +1,10 @@
+import {Socket} from "socket.io";
+
+interface GameState {
+    players: Player[];
+}
+
 interface Player {
-    name: string;
+    socket: Socket;
+    name: String;
 }

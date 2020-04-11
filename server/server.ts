@@ -1,8 +1,9 @@
 import * as express from "express";
-import * as path from "path";
 import {Socket} from "socket.io";
-const gameState: any = {
-    players: {}
+import {GameState, Player} from "index";
+
+let gameState: GameState = {
+    players: []
 };
 
 const app = express();
@@ -20,48 +21,28 @@ io.on('connection', (socket: Socket) => {
 
     socket.on('disconnect', function() {
         console.log('user disconnected: ', socket.id);
-        delete gameState.players[socket.id]
+        //delete gameState.players[socket.id]
     });
 
-    socket.on("message", function(message: any) {
-        console.log(`From socket ${socket.id} I received ${message}`);
-        socket.emit("message", `You are ${socket.id} and I got this from you: ${message}`);
+    socket.on("message", function(message: String) {
+        console.log(`From the socket ${socket.id} I received ${message}`);
     });
 
-    socket.on('newPlayer', () => {
-        console.log('we have a new player: ', socket.id);
-        gameState.players[socket.id] = {
-            x: Math.floor(Math.random()*600),
-            y: Math.floor(Math.random()*480),
-            width: 25,
-            height: 25
-        }
+    socket.on("connectWithPlayerName", function(playerName: String) {
+        console.log(`connect: socketId=${socket.id} and name=${playerName}. Right now we have ${gameState.players.length} players`);
+        const newPlayer: Player = {
+            socket: socket,
+            name: playerName,
+        };
+        gameState.players.push(newPlayer);
+        socket.emit('connectionSuccessful');
+        io.sockets.emit('message', `New player connected: ${playerName}`);
     });
-
-    socket.on('playerMovement', (playerMovement: any) => {
-        const player = gameState.players[socket.id];
-        const canvasWidth = 680;
-        const canvasHeight = 520;
-
-        if (playerMovement.left && player.x > 0) {
-            player.x -= 4
-        }
-        if (playerMovement.right && player.x < canvasWidth - player.width) {
-            player.x += 4
-        }
-
-        if (playerMovement.up && player.y > 0) {
-            player.y -= 4
-        }
-        if (playerMovement.down && player.y < canvasHeight - player.height) {
-            player.y += 4
-        }
-    })
 });
 
-setInterval(() => {
-    io.sockets.emit('state', gameState);
-}, 1000 / 60);
+// setInterval(() => {
+//     io.sockets.emit('state', gameState);
+// }, 1000 / 60);
 
 const server = http.listen(3000, function() {
     console.log("listening on *:3000");
