@@ -13,9 +13,7 @@ let http = require("http").Server(app);
 // http server.
 let io = require("socket.io")(http);
 
-app.get("/", (req: any, res: any) => {
-    res.sendFile(path.resolve("./src/client/index.html"));
-});
+app.use(express.static("public"));
 
 io.on('connection', (socket: any) => {
     console.log('a user connected:', socket.id);
