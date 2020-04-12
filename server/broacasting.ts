@@ -18,7 +18,7 @@ export const broadcast = (sockets: Namespace, message: String, type: String) => 
         text: message,
         date: new Date().toLocaleTimeString(),
     };
-    sockets.emit('message', newGameLogEntry);
+    sockets.emit('gameLog', newGameLogEntry);
 };
 
 export const broadcastState = (sockets: Namespace, gameState: GameState) => {

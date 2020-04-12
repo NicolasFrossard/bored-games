@@ -44,8 +44,13 @@ export default {
   },
   methods: {
     initSocket: function () {
-      this.sockets.subscribe('message', (gameLogInfo) => {
+      this.sockets.subscribe('gameLog', (gameLogInfo) => {
         this.logEntries.unshift(gameLogInfo)
+        if(gameLogInfo.type === 'ERROR') {
+          this.$message.error(gameLogInfo.text);
+        } else if(gameLogInfo.type === 'WARN') {
+          this.$message.warning(gameLogInfo.text);
+        }
       });
       this.sockets.subscribe('gameState', (gameState) => {
         this.gameState = gameState;
