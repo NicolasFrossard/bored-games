@@ -58,6 +58,15 @@ io.on('connection', (socket: Socket) => {
         broadcastInfo(io.sockets, 'Game was stopped!');
         broadcastState(io.sockets, gameState);
     });
+
+    socket.on('playCard', function (card: number) {
+        console.log(`Player ${socket.id} is playing the card ${card}`);
+        gameState.playCard(card);
+
+        const player = gameState.getPlayerWithSocketId(socket.id);
+        broadcastInfo(io.sockets, `${player?.name} has played the card ${card}`);
+        broadcastState(io.sockets, gameState);
+    });
 });
 
 // setInterval(() => {

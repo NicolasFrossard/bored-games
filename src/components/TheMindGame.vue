@@ -6,13 +6,11 @@
       </el-col>
       <el-col>
         <template v-for="card in player.cardsInHand">
-          <el-button class="large" plain size="medium">
-            <span v-if="player.socketId === mySocketId">
-              {{card}}
-            </span>
-            <span v-else>
-              ?
-            </span>
+          <el-button v-if="player.socketId === mySocketId" class="large" plain size="medium" @click="playCard(card)">
+            {{card}}
+          </el-button>
+          <el-button v-else class="large" plain size="medium">
+            ?
           </el-button>
         </template>
       </el-col>
@@ -31,6 +29,11 @@ export default {
     mySocketId: {
       type: String,
       required: true,
+    }
+  },
+  methods: {
+    playCard: function (card) {
+      this.$emit('playCard', card);
     }
   }
 }

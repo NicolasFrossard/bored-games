@@ -23,6 +23,10 @@ export class BaseGameState implements State {
         return this.players.find(player => player.name === playerName);
     }
 
+    getPlayerWithSocketId(socketId: String) : Player | undefined {
+        return this.players.find(player => player.socketId === socketId);
+    }
+
     updateDisconnectedPlayer(socket: Socket, playerName: String) : void {
         for (let i = 0; i < this.players.length; i++) {
             const player = this.players[i];

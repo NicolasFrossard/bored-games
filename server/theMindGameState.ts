@@ -3,7 +3,7 @@ import {BaseGameState} from "./baseGameState";
 
 export class TheMindGameState extends BaseGameState implements TheMindGameState {
     round: number;
-    cardsPlayed: [];
+    cardsPlayed: number[];
 
     constructor(players: Player[]) {
         super(players);
@@ -47,5 +47,13 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
 
     getRandomInt(max: number) {
         return 1 + Math.floor(Math.random() * Math.floor(max+1));
+    }
+
+    playCard(card: number) : boolean {
+        if(this.cardsPlayed.includes(card)) {
+            console.error(`The card ${card} was already played. This should not be possible`);
+        }
+        this.cardsPlayed.push(card);
+        return true;
     }
 }
