@@ -1,4 +1,6 @@
 export interface State {
+    status: GameStatus;
+    round: number;
     players: Player[];
 }
 
@@ -15,3 +17,5 @@ export interface LogEntry {
 }
 
 export type LogEntryType = "INFO" | "WARN" | "ERROR"
+
+export type GameStatus = "TO_BE_STARTED" | "STARTED"

@@ -1,9 +1,13 @@
 import {Socket} from "socket.io";
-import {Player, State} from "index";
+import {GameStatus, Player, State} from "index";
 
 export class BaseGameState implements State {
+    status: GameStatus;
+    round: number;
     players: Player[];
     constructor(players: Player[]) {
+        this.status = "TO_BE_STARTED";
+        this.round = 1;
         this.players = players;
     }
 
@@ -50,5 +54,9 @@ export class BaseGameState implements State {
             }
         }
         return undefined;
+    }
+
+    startTheGame() : void {
+        this.status = "STARTED";
     }
 }

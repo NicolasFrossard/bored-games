@@ -1,6 +1,6 @@
 import * as express from "express";
 import {Socket} from "socket.io";
-import {broadcastError, broadcastInfo, broadcastState} from "./broacasting"
+import {broadcastError, broadcastInfo, broadcastState, broadcastWarning} from "./broacasting"
 import {BaseGameState} from "./baseGameState";
 
 let gameState = new BaseGameState([]);
@@ -33,12 +33,21 @@ io.on('connection', (socket: Socket) => {
                 broadcastInfo(io.sockets, `Player came back: ${playerName}`);
                 broadcastState(io.sockets, gameState);
             }
-        } else {
+        } else if(gameState.status === "TO_BE_STARTED") {
             gameState.addNewPlayer(socket, playerName);
             socket.emit('connectionSuccessful');
             broadcastInfo(io.sockets, `New player connected: ${playerName}`);
             broadcastState(io.sockets, gameState);
+        } else {
+            broadcastWarning(io.sockets, `Rejected player ${playerName} as the game started already. Sorry, dude.`);
         }
+    });
+
+    socket.on('startTheGame', function () {
+        console.log('Starting the game');
+        gameState.startTheGame();
+        broadcastInfo(io.sockets, 'Game has started!');
+        broadcastState(io.sockets, gameState);
     });
 });
 

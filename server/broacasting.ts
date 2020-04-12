@@ -5,6 +5,10 @@ export const broadcastInfo = (sockets: Namespace, message: String) => {
     broadcast(sockets, "INFO", message)
 };
 
+export const broadcastWarning = (sockets: Namespace, message: String) => {
+    broadcast(sockets, "WARN", message)
+};
+
 export const broadcastError = (sockets: Namespace, message: String) => {
     broadcast(sockets, "ERROR", message)
 };
