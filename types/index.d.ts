@@ -1,17 +1,17 @@
-declare module Game {
-    interface State {
-        players: Player[];
-    }
-
-    interface Player {
-        socketId: String;
-        name: String;
-        connected: boolean;
-    }
-
-    interface LogEntry {
-        type: String;
-        text: String;
-        date: String;
-    }
+export interface State {
+    players: Player[];
 }
+
+export interface Player {
+    socketId: String;
+    name: String;
+    connected: boolean;
+}
+
+export interface LogEntry {
+    type: LogEntryType;
+    text: String;
+    date: String;
+}
+
+export type LogEntryType = "INFO" | "WARN" | "ERROR"

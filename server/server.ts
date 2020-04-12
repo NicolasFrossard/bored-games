@@ -1,6 +1,6 @@
 import * as express from "express";
 import {Socket} from "socket.io";
-import {broadcast, broadcastState} from "./broacasting"
+import {broadcastInfo, broadcastError, broadcastState} from "./broacasting"
 import {BaseGameState} from "./baseGameState";
 
 let gameState = new BaseGameState([]);
@@ -20,7 +20,7 @@ io.on('connection', (socket: Socket) => {
         console.log('Socket disconnected: ', socket.id);
         let playerName = gameState.disconnectPlayer(socket);
         if(playerName) {
-            broadcast(io.sockets, "ERROR", `Player disconnected: ${playerName}`);
+            broadcastError(io.sockets, `Player disconnected: ${playerName}`);
             broadcastState(io.sockets, gameState);
         }
     });
@@ -28,7 +28,7 @@ io.on('connection', (socket: Socket) => {
     socket.on("connectWithPlayerName", function(playerName: String) {
         gameState.addNewPlayer(socket, playerName);
         socket.emit('connectionSuccessful');
-        broadcast(io.sockets, "INFO", `New player connected: ${playerName}`);
+        broadcastInfo(io.sockets, `New player connected: ${playerName}`);
         broadcastState(io.sockets, gameState);
     });
 });
