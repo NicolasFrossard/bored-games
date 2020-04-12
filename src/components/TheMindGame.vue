@@ -6,10 +6,13 @@
       </el-col>
       <el-col>
         <template v-for="card in player.cardsInHand">
-          <el-button v-if="player.socketId === mySocketId" class="large" plain size="medium" @click="playCard(card)">
+          <el-button v-if="gameState.cardsPlayed.includes(card)" class="large" plain size="medium" @click="playCard(card)">
+            ✓
+          </el-button>
+          <el-button v-else-if="player.socketId === mySocketId" class="large non-played-card" plain size="medium" @click="playCard(card)">
             {{card}}
           </el-button>
-          <el-button v-else class="large" plain size="medium">
+          <el-button v-else class="large non-played-card" plain size="medium">
             ?
           </el-button>
         </template>
@@ -44,9 +47,11 @@ export default {
     padding: 20px 10px;
     font-size: 28px;
     border-radius: 8px;
-    background-color: #dcdfe6;
     font-family: fantasy;
     font-weight: bold;
+  }
+  .el-button.non-played-card {
+    background-color: #dcdfe6;
   }
   .el-row.spaced {
     margin-top: 20px;

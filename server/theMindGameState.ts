@@ -56,4 +56,8 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
         this.cardsPlayed.push(card);
         return true;
     }
+
+    isCurrentRoundFinished() {
+        return this.cardsPlayed.length === this.round * this.players.length;
+    }
 }

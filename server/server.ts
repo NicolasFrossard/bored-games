@@ -65,6 +65,15 @@ io.on('connection', (socket: Socket) => {
 
         const player = gameState.getPlayerWithSocketId(socket.id);
         broadcastInfo(io.sockets, `${player?.name} has played the card ${card}`);
+
+        if(gameState.isCurrentRoundFinished()) {
+            broadcastInfo(io.sockets, `Round ${gameState.round} is over, congratulations!`);
+            gameState.moveToNextRound();
+            broadcastInfo(io.sockets, `Starting round ${gameState.round}`);
+        } else {
+            console.log('Round is not done yet')
+        }
+
         broadcastState(io.sockets, gameState);
     });
 });
