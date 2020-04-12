@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="entries" height="800px" style="width: 100%">
+  <el-table :data="entries" height="600px" style="width: 100%">
     <el-table-column prop="icon" width="40">
       <template slot-scope="scope">
         <i v-if="scope.row.type === 'INFO'" class="el-icon-info info-game-log"></i>
