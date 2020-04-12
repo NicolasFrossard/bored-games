@@ -6,6 +6,7 @@ export interface State {
 export interface TheMindGameState extends State {
     round: number;
     cardsPlayed: number[];
+    lives: number;
 }
 
 export interface Player {

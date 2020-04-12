@@ -1,19 +1,27 @@
 import {Player} from "index";
 import {BaseGameState} from "./baseGameState";
+import {Socket} from "socket.io";
 
 export class TheMindGameState extends BaseGameState implements TheMindGameState {
     round: number;
     cardsPlayed: number[];
+    lives: number;
 
     constructor(players: Player[]) {
         super(players);
         this.round = 0;
         this.cardsPlayed = [];
+        this.lives = players.length;
     }
 
     stopTheGame(): void {
         super.stopTheGame();
         this.round = 0;
+    }
+
+    addNewPlayer(socket: Socket, playerName: String) : void {
+        super.addNewPlayer(socket, playerName);
+        this.lives++;
     }
 
     moveToNextRound(): void {

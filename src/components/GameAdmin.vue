@@ -6,6 +6,11 @@
     <template v-if="gameState.status === 'STARTED'">
       <el-tag type="success">Game has started</el-tag>
       <el-tag v-if="gameState.status === 'STARTED'">Round {{gameState.round}}</el-tag>
+      <el-tag>
+        <span v-for="live of gameState.lives">
+          ❤️
+        </span>️
+      </el-tag>
       <el-button type="danger" size="small" @click="dialogVisible = true" plain>Stop the current game</el-button>
       <el-dialog title="Restart the game" :visible.sync="dialogVisible" width="30%">
         <span>Are you sure you want to stop the game?</span>
