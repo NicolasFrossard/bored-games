@@ -3,7 +3,7 @@
     <el-row gutter="2" v-if="connectionEstablished">
       <el-col :span="16">
         <div>
-          <game-admin :game-state="gameState" @onStartTheGame="startTheGame"></game-admin>
+          <game-admin :game-state="gameState" @onStartTheGame="startTheGame" @onStopTheGame="stopTheGame"></game-admin>
         </div>
       </el-col>
       <el-col :span="8">
@@ -68,6 +68,9 @@ export default {
     },
     startTheGame: function () {
       this.$socket.emit('startTheGame')
+    },
+    stopTheGame: function () {
+      this.$socket.emit('stopTheGame')
     },
   }
 }

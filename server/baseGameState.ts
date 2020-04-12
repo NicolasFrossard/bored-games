@@ -59,4 +59,9 @@ export class BaseGameState implements State {
     startTheGame() : void {
         this.status = "STARTED";
     }
+
+    stopTheGame() : void {
+        this.round = 1;
+        this.status = "TO_BE_STARTED";
+    }
 }

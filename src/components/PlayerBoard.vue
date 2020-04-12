@@ -6,7 +6,7 @@
         <i v-else class="el-icon-circle-close notConnected"></i>
       </template>
     </el-table-column>
-    <el-table-column prop="name" label="Player name" />
+    <el-table-column prop="name" label="Players" />
   </el-table>
 </template>
 

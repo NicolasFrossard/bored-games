@@ -49,6 +49,13 @@ io.on('connection', (socket: Socket) => {
         broadcastInfo(io.sockets, 'Game has started!');
         broadcastState(io.sockets, gameState);
     });
+
+    socket.on('stopTheGame', function () {
+        console.log('Stopping the game');
+        gameState.stopTheGame();
+        broadcastInfo(io.sockets, 'Game was stopped!');
+        broadcastState(io.sockets, gameState);
+    });
 });
 
 // setInterval(() => {
