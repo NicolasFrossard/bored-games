@@ -1,19 +1,7 @@
 import {Namespace} from "socket.io";
 
-export const broadcastInfo = (sockets: Namespace, message: String) => {
-    broadcast(sockets, message, "INFO")
-};
-
-export const broadcastWarning = (sockets: Namespace, message: String) => {
-    broadcast(sockets, message, "WARN")
-};
-
-export const broadcastError = (sockets: Namespace, message: String) => {
-    broadcast(sockets, message, "ERROR")
-};
-
-export const broadcast = (sockets: Namespace, message: String, type: String) => {
-    const newGameLogEntry: GameLogEntry = {
+export const broadcast = (sockets: Namespace, type: String, message: String) => {
+    const newGameLogEntry: Game.LogEntry = {
         type: type,
         text: message,
         date: new Date().toLocaleTimeString(),
@@ -21,6 +9,6 @@ export const broadcast = (sockets: Namespace, message: String, type: String) => 
     sockets.emit('gameLog', newGameLogEntry);
 };
 
-export const broadcastState = (sockets: Namespace, gameState: GameState) => {
+export const broadcastState = (sockets: Namespace, gameState: Game.State) => {
     sockets.emit('gameState', gameState);
 };

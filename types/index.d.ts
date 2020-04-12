@@ -1,15 +1,17 @@
-interface GameState {
-    players: Player[];
-}
+declare module Game {
+    interface State {
+        players: Player[];
+    }
 
-interface Player {
-    socketId: String;
-    name: String;
-    connected: boolean;
-}
+    interface Player {
+        socketId: String;
+        name: String;
+        connected: boolean;
+    }
 
-interface GameLogEntry {
-    type: String;
-    text: String;
-    date: String;
+    interface LogEntry {
+        type: String;
+        text: String;
+        date: String;
+    }
 }

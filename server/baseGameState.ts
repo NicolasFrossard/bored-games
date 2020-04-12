@@ -1,14 +1,14 @@
 import {Socket} from "socket.io";
 
-export class BaseGameState implements GameState {
-    players: Player[];
-    constructor(players: Player[]) {
+export class BaseGameState implements Game.State {
+    players: Game.Player[];
+    constructor(players: Game.Player[]) {
         this.players = players;
     }
 
     addNewPlayer(socket: Socket, playerName: String) : void {
         console.log(`connect: socketId=${socket.id} and name=${playerName}. Right now we have ${this.players.length} players`);
-        const newPlayer: Player = {
+        const newPlayer: Game.Player = {
             socketId: socket.id,
             name: playerName,
             connected: true,
