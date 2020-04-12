@@ -4,10 +4,15 @@ export interface State {
     players: Player[];
 }
 
+export interface TheMindGameState extends State {
+    cardsPlayed: number[];
+}
+
 export interface Player {
     socketId: String;
     name: String;
     connected: boolean;
+    cardsInHand: number[];
 }
 
 export interface LogEntry {

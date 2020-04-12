@@ -1,9 +1,9 @@
 import * as express from "express";
 import {Socket} from "socket.io";
 import {broadcastError, broadcastInfo, broadcastState, broadcastWarning} from "./broacasting"
-import {BaseGameState} from "./baseGameState";
+import {TheMindGameState} from "./theMindGameState";
 
-let gameState = new BaseGameState([]);
+let gameState = new TheMindGameState([]);
 
 const app = express();
 app.set("port", process.env.PORT || 3000);

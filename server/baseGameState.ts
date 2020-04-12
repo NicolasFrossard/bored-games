@@ -5,6 +5,7 @@ export class BaseGameState implements State {
     status: GameStatus;
     round: number;
     players: Player[];
+
     constructor(players: Player[]) {
         this.status = "TO_BE_STARTED";
         this.round = 1;
@@ -41,6 +42,7 @@ export class BaseGameState implements State {
             socketId: socket.id,
             name: playerName,
             connected: true,
+            cardsInHand: [],
         };
         this.players.push(newPlayer);
     }

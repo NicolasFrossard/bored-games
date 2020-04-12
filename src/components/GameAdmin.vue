@@ -17,7 +17,9 @@
     </template>
     <template v-else>
       <el-tag type="info">Game to be started</el-tag>
-      <el-button type="primary" size="small" @click="onStartTheGame">Click here to start the game</el-button>
+      <el-button type="primary" size="small" @click="onStartTheGame">
+        Click here to start the game with {{gameState.players.length}} player{{gameState.players.length > 1 ? 's' : ''}}
+      </el-button>
     </template>
   </el-row>
 </template>
