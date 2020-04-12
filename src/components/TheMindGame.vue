@@ -7,7 +7,7 @@
         </el-col>
         <el-col>
           <template v-for="card in player.cardsInHand">
-            <el-button v-if="gameState.cardsPlayed.includes(card)" class="card large" plain @click="playCard(card)">
+            <el-button v-if="gameState.cardsPlayed.includes(card)" class="card large" plain>
               ✓
             </el-button>
             <el-button v-else-if="player.socketId === mySocketId" class="card large own-non-played-card" plain @click="playCard(card)">
