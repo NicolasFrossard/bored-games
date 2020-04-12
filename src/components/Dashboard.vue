@@ -6,6 +6,7 @@
       </el-col>
       <el-col :span="10">
         <div class="grid-content bg-purple-dark">
+          <player-board v-if="gameState" :players="gameState.players"></player-board>
           <game-log :entries="logEntries"></game-log>
         </div>
       </el-col>
@@ -22,9 +23,13 @@
 
 <script>
 import GameLog from './GameLog'
+import PlayerBoard from './PlayerBoard'
 
 export default {
-  components: {GameLog},
+  components: {
+    GameLog,
+    PlayerBoard
+  },
   name: 'Dashboard',
   mounted() {
     this.initSocket();
@@ -34,12 +39,16 @@ export default {
       logEntries: [],
       playerName: '',
       connectionEstablished: false,
+      gameState: undefined,
     }
   },
   methods: {
     initSocket: function () {
       this.sockets.subscribe('message', (gameLogInfo) => {
         this.logEntries.unshift(gameLogInfo)
+      });
+      this.sockets.subscribe('gameState', (gameState) => {
+        this.gameState = gameState;
       });
       this.sockets.subscribe('connectionSuccessful', () => {
         this.connectionEstablished = true;

@@ -1,43 +1,37 @@
 import * as express from "express";
 import {Socket} from "socket.io";
-import {broadcastInfo} from "./gameLogUtil"
-import {GameState, Player} from "index";
+import {broadcastError, broadcastInfo} from "./broacasting"
+import {BaseGameState} from "./baseGameState";
 
-let gameState: GameState = {
-    players: []
-};
+let gameState = new BaseGameState([]);
 
 const app = express();
 app.set("port", process.env.PORT || 3000);
 
 let http = require("http").Server(app);
-// set up socket.io and bind it to our
-// http server.
 let io = require("socket.io")(http);
 
 app.use(express.static("dist"));
 
 io.on('connection', (socket: Socket) => {
-    console.log('a user connected:', socket.id);
+    console.log('Socket connected:', socket.id);
 
     socket.on('disconnect', function() {
-        console.log('user disconnected: ', socket.id);
+        console.log('Socket disconnected: ', socket.id);
+        let playerName = gameState.disconnectPlayer(socket);
+        if(playerName) {
+            broadcastError(io.sockets, `Player disconnected: ${playerName}`);
+        }
+        // broadcastInfo(io.sockets, `Player connected: ${playerName}`);
+        // broadcastState(io.sockets, gameState);
         //delete gameState.players[socket.id]
     });
 
-    socket.on("message", function(message: String) {
-        console.log(`From the socket ${socket.id} I received ${message}`);
-    });
-
     socket.on("connectWithPlayerName", function(playerName: String) {
-        console.log(`connect: socketId=${socket.id} and name=${playerName}. Right now we have ${gameState.players.length} players`);
-        const newPlayer: Player = {
-            socket: socket,
-            name: playerName,
-        };
-        gameState.players.push(newPlayer);
+        gameState.addNewPlayer(socket, playerName);
         socket.emit('connectionSuccessful');
         broadcastInfo(io.sockets, `New player connected: ${playerName}`);
+        //broadcastState(io.sockets, gameState);
     });
 });
 

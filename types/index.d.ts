@@ -7,6 +7,7 @@ interface GameState {
 interface Player {
     socket: Socket;
     name: String;
+    connected: boolean;
 }
 
 interface GameLogEntry {
