@@ -4,7 +4,7 @@
       <el-col :span="16">
         <div>
           <game-admin :game-state="gameState" @onStartTheGame="startTheGame" @onStopTheGame="stopTheGame"></game-admin>
-          <the-mind-game v-if="gameState.status === 'STARTED'" :game-state="gameState" :my-socket-id="mySocketId" @playCard="playCard"></the-mind-game>
+          <the-mind-game v-if="gameState && gameState.status === 'STARTED'" :game-state="gameState" :my-socket-id="mySocketId" @playCard="playCard"></the-mind-game>
         </div>
       </el-col>
       <el-col :span="8">

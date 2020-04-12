@@ -6,9 +6,9 @@
     <template v-if="gameState.status === 'STARTED'">
       <el-tag type="success">Game has started</el-tag>
       <el-tag v-if="gameState.status === 'STARTED'">Round {{gameState.round}}</el-tag>
-      <el-button type="danger" size="small" @click="dialogVisible = true" plain>Restart the game</el-button>
+      <el-button type="danger" size="small" @click="dialogVisible = true" plain>Stop the current game</el-button>
       <el-dialog title="Restart the game" :visible.sync="dialogVisible" width="30%">
-        <span>Are you sure you want to restart the game?</span>
+        <span>Are you sure you want to stop the game?</span>
           <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">Cancel</el-button>
           <el-button type="primary" @click="onStopTheGame">Confirm</el-button>
