@@ -5,7 +5,6 @@
         <div class="grid-content bg-purple-dark">a</div>
       </el-col>
       <el-col :span="10">
-        <el-button @click="sendMsg" type="primary">Send a message</el-button>
         <div class="grid-content bg-purple-dark">
           <game-log :entries="logEntries"></game-log>
         </div>
@@ -13,11 +12,9 @@
     </el-row>
     <el-row v-else>
       <el-col :span="4" :offset="10">
-        <el-row>
-          <el-input size="large" placeholder="Who are you?" v-model="playerName">
-            <el-button slot="append" :disabled="playerName.length === 0" @click="connect">Connect</el-button>
-          </el-input>
-        </el-row>
+        <el-input size="large" maxlength="8" placeholder="Who are you?" v-model="playerName">
+          <el-button slot="append" :disabled="playerName.length === 0" @click="connect">Connect</el-button>
+        </el-input>
       </el-col>
     </el-row>
   </el-row>
@@ -31,7 +28,6 @@ export default {
   name: 'Dashboard',
   mounted() {
     this.initSocket();
-    this.addLogEntry("Started")
   },
   data () {
     return {
@@ -41,21 +37,12 @@ export default {
     }
   },
   methods: {
-    sendMsg: function () {
-      this.$socket.emit('message', "Helloooo")
-    },
     initSocket: function () {
-      this.sockets.subscribe('message', (message) => {
-        this.addLogEntry(message)
+      this.sockets.subscribe('message', (gameLogInfo) => {
+        this.logEntries.unshift(gameLogInfo)
       });
       this.sockets.subscribe('connectionSuccessful', () => {
         this.connectionEstablished = true;
-      });
-    },
-    addLogEntry: function (message) {
-      this.logEntries.unshift({
-        timestamp: new Date().toLocaleTimeString(),
-        message: message
       });
     },
     connect: function () {

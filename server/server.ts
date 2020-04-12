@@ -1,5 +1,6 @@
 import * as express from "express";
 import {Socket} from "socket.io";
+import {broadcastInfo} from "./gameLogUtil"
 import {GameState, Player} from "index";
 
 let gameState: GameState = {
@@ -36,7 +37,7 @@ io.on('connection', (socket: Socket) => {
         };
         gameState.players.push(newPlayer);
         socket.emit('connectionSuccessful');
-        io.sockets.emit('message', `New player connected: ${playerName}`);
+        broadcastInfo(io.sockets, `New player connected: ${playerName}`);
     });
 });
 
