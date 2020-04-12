@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row class="spaced" v-for="player in players" v-bind:key="player.socketId">
+    <el-row class="spaced" v-for="player in gameState.players" v-bind:key="player.socketId">
       <el-col>
         <span class="player-name">{{player.name}}</span>
       </el-col>
@@ -24,8 +24,8 @@
 export default {
   name: 'GameLog',
   props: {
-    players: {
-      type: Array,
+    gameState: {
+      type: Object,
       required: true,
     },
     mySocketId: {
