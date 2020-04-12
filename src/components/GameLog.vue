@@ -8,7 +8,7 @@
       </template>
     </el-table-column>
     <el-table-column prop="text" label="What happened?"></el-table-column>
-    <el-table-column prop="date" label="When?" width="180"></el-table-column>
+    <el-table-column prop="date" label="When?" width="100"></el-table-column>
   </el-table>
 </template>
 

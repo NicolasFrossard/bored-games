@@ -1,6 +1,6 @@
 import * as express from "express";
 import {Socket} from "socket.io";
-import {broadcastInfo, broadcastError, broadcastState} from "./broacasting"
+import {broadcastError, broadcastInfo, broadcastState} from "./broacasting"
 import {BaseGameState} from "./baseGameState";
 
 let gameState = new BaseGameState([]);
@@ -16,20 +16,29 @@ app.use(express.static("dist"));
 io.on('connection', (socket: Socket) => {
     console.log('Socket connected:', socket.id);
 
-    socket.on('disconnect', function() {
+    socket.on('disconnect', function () {
         console.log('Socket disconnected: ', socket.id);
         let playerName = gameState.disconnectPlayer(socket);
-        if(playerName) {
+        if (playerName) {
             broadcastError(io.sockets, `Player disconnected: ${playerName}`);
             broadcastState(io.sockets, gameState);
         }
     });
 
-    socket.on("connectWithPlayerName", function(playerName: String) {
-        gameState.addNewPlayer(socket, playerName);
-        socket.emit('connectionSuccessful');
-        broadcastInfo(io.sockets, `New player connected: ${playerName}`);
-        broadcastState(io.sockets, gameState);
+    socket.on("connectWithPlayerName", function (playerName: String) {
+        if (gameState.isPlayerNameTaken(playerName)) {
+            if (gameState.isPlayerDisconnected(playerName)) {
+                gameState.updateDisconnectedPlayer(socket, playerName);
+                socket.emit('connectionSuccessful');
+                broadcastInfo(io.sockets, `Player came back: ${playerName}`);
+                broadcastState(io.sockets, gameState);
+            }
+        } else {
+            gameState.addNewPlayer(socket, playerName);
+            socket.emit('connectionSuccessful');
+            broadcastInfo(io.sockets, `New player connected: ${playerName}`);
+            broadcastState(io.sockets, gameState);
+        }
     });
 });
 
@@ -37,6 +46,6 @@ io.on('connection', (socket: Socket) => {
 //     io.sockets.emit('state', gameState);
 // }, 1000 / 60);
 
-const server = http.listen(3000, function() {
+const server = http.listen(3000, function () {
     console.log("listening on *:3000");
 });

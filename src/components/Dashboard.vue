@@ -1,10 +1,10 @@
 <template>
   <el-row class="dashboard">
     <el-row gutter="2" v-if="connectionEstablished">
-      <el-col :span="14">
+      <el-col :span="16">
         <div class="grid-content bg-purple-dark">a</div>
       </el-col>
-      <el-col :span="10">
+      <el-col :span="8">
         <div class="grid-content bg-purple-dark">
           <player-board v-if="gameState" :players="gameState.players"></player-board>
           <game-log :entries="logEntries"></game-log>

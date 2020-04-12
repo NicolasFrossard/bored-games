@@ -7,6 +7,30 @@ export class BaseGameState implements State {
         this.players = players;
     }
 
+    isPlayerNameTaken(playerName: String) : boolean {
+        return this.getPlayerWithName(playerName) !== undefined;
+    }
+
+    isPlayerDisconnected(playerName: String) : boolean {
+        const player = this.getPlayerWithName(playerName);
+        return player && !player.connected;
+    }
+
+    getPlayerWithName(playerName: String) : Player | undefined {
+        return this.players.find(player => player.name === playerName);
+    }
+
+    updateDisconnectedPlayer(socket: Socket, playerName: String) : void {
+        for (let i = 0; i < this.players.length; i++) {
+            const player = this.players[i];
+            if(player.name === playerName) {
+                this.players[i].connected = true;
+                this.players[i].socketId = socket.id;
+                return;
+            }
+        }
+    }
+
     addNewPlayer(socket: Socket, playerName: String) : void {
         console.log(`connect: socketId=${socket.id} and name=${playerName}. Right now we have ${this.players.length} players`);
         const newPlayer: Player = {
