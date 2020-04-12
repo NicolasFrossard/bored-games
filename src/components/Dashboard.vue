@@ -4,6 +4,7 @@
       <el-col :span="16">
         <div>
           <game-admin :game-state="gameState" @onStartTheGame="startTheGame" @onStopTheGame="stopTheGame"></game-admin>
+          <the-mind-game v-if="gameState.status === 'STARTED'" :players="gameState.players" :my-socket-id="mySocketId"></the-mind-game>
         </div>
       </el-col>
       <el-col :span="8">
@@ -27,12 +28,14 @@
 import GameLog from './GameLog'
 import PlayerBoard from './PlayerBoard'
 import GameAdmin from './GameAdmin'
+import TheMindGame from './TheMindGame'
 
 export default {
   components: {
     GameLog,
     PlayerBoard,
-    GameAdmin
+    GameAdmin,
+    TheMindGame
   },
   name: 'Dashboard',
   mounted() {
@@ -44,6 +47,7 @@ export default {
       playerName: '',
       connectionEstablished: false,
       gameState: undefined,
+      mySocketId: '',
     }
   },
   methods: {
@@ -59,8 +63,9 @@ export default {
       this.sockets.subscribe('gameState', (gameState) => {
         this.gameState = gameState;
       });
-      this.sockets.subscribe('connectionSuccessful', () => {
+      this.sockets.subscribe('connectionSuccessful', (socketId) => {
         this.connectionEstablished = true;
+        this.mySocketId = socketId;
       });
     },
     connect: function () {

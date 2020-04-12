@@ -29,13 +29,13 @@ io.on('connection', (socket: Socket) => {
         if (gameState.isPlayerNameTaken(playerName)) {
             if (gameState.isPlayerDisconnected(playerName)) {
                 gameState.updateDisconnectedPlayer(socket, playerName);
-                socket.emit('connectionSuccessful');
+                socket.emit('connectionSuccessful', socket.id);
                 broadcastInfo(io.sockets, `Player came back: ${playerName}`);
                 broadcastState(io.sockets, gameState);
             }
         } else if(gameState.status === "TO_BE_STARTED") {
             gameState.addNewPlayer(socket, playerName);
-            socket.emit('connectionSuccessful');
+            socket.emit('connectionSuccessful', socket.id);
             broadcastInfo(io.sockets, `New player connected: ${playerName}`);
             broadcastState(io.sockets, gameState);
         } else {
