@@ -1,4 +1,3 @@
-import {GameState, Player} from "index";
 import {Socket} from "socket.io";
 
 export class BaseGameState implements GameState {
@@ -10,7 +9,7 @@ export class BaseGameState implements GameState {
     addNewPlayer(socket: Socket, playerName: String) : void {
         console.log(`connect: socketId=${socket.id} and name=${playerName}. Right now we have ${this.players.length} players`);
         const newPlayer: Player = {
-            socket: socket,
+            socketId: socket.id,
             name: playerName,
             connected: true,
         };
@@ -20,7 +19,7 @@ export class BaseGameState implements GameState {
     disconnectPlayer(socket: Socket) : String {
         for (let i = 0; i < this.players.length; i++) {
             const player = this.players[i];
-            if(player.socket.id === socket.id) {
+            if(player.socketId === socket.id) {
                 this.players[i].connected = false;
                 return this.players[i].name;
             }

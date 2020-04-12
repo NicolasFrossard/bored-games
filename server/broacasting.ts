@@ -1,5 +1,4 @@
 import {Namespace} from "socket.io";
-import {GameLogEntry, GameState} from "index";
 
 export const broadcastInfo = (sockets: Namespace, message: String) => {
     broadcast(sockets, message, "INFO")
