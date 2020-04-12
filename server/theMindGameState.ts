@@ -11,12 +11,12 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
         this.cardsPlayed = [];
     }
 
-    stopTheGame() : void {
+    stopTheGame(): void {
         super.stopTheGame();
         this.round = 0;
     }
 
-    moveToNextRound() : void {
+    moveToNextRound(): void {
         this.round++;
         this.cardsPlayed = [];
 
@@ -25,12 +25,14 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
         for (let i = 0; i < this.players.length; i++) {
             let player = this.players[i];
             let newPlayerCards: number[] = [];
-            for(let i = 0; i < this.round; i++) {
+            for (let i = 0; i < this.round; i++) {
                 const newCard = this.randomNewCard(cardsAlreadyGiven);
                 cardsAlreadyGiven.push(newCard);
                 newPlayerCards.push(newCard);
             }
-            player.cardsInHand = newPlayerCards;
+            player.cardsInHand = newPlayerCards.sort(function (a, b) {
+                return a - b
+            });
             this.players[i] = player;
         }
 
@@ -40,17 +42,17 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
     randomNewCard(cardsAlreadyGiven: number[]) {
         let randomNewCard: number;
         do {
-            randomNewCard = this.getRandomInt(101);
-        } while(cardsAlreadyGiven.includes(randomNewCard));
+            randomNewCard = this.getRandomInt(100);
+        } while (cardsAlreadyGiven.includes(randomNewCard));
         return randomNewCard;
     }
 
     getRandomInt(max: number) {
-        return 1 + Math.floor(Math.random() * Math.floor(max+1));
+        return 1 + Math.floor(Math.random() * Math.floor(max + 1));
     }
 
-    playCard(card: number) : boolean {
-        if(this.cardsPlayed.includes(card)) {
+    playCard(card: number): boolean {
+        if (this.cardsPlayed.includes(card)) {
             console.error(`The card ${card} was already played. This should not be possible`);
         }
         this.cardsPlayed.push(card);
