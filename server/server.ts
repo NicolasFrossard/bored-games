@@ -46,7 +46,9 @@ io.on('connection', (socket: Socket) => {
     socket.on('startTheGame', function () {
         console.log('Starting the game');
         gameState.startTheGame();
+        gameState.moveToNextRound();
         broadcastInfo(io.sockets, 'Game has started!');
+        broadcastInfo(io.sockets, 'Starting first round');
         broadcastState(io.sockets, gameState);
     });
 

@@ -1,10 +1,10 @@
 export interface State {
     status: GameStatus;
-    round: number;
     players: Player[];
 }
 
 export interface TheMindGameState extends State {
+    round: number;
     cardsPlayed: number[];
 }
 
