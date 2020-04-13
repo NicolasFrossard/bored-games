@@ -49,11 +49,11 @@ export class BaseGameState implements State {
         this.players.push(newPlayer);
     }
 
-    disconnectPlayer(socket: Socket) : String {
+    setIsConnected(socket: Socket, isConnected: boolean) : String {
         for (let i = 0; i < this.players.length; i++) {
             const player = this.players[i];
             if(player.socketId === socket.id) {
-                this.players[i].connected = false;
+                this.players[i].connected = isConnected;
                 return this.players[i].name;
             }
         }

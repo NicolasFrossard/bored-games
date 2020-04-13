@@ -18,11 +18,16 @@ io.on('connection', (socket: Socket) => {
 
     socket.on('disconnect', function () {
         console.log('Socket disconnected: ', socket.id);
-        let playerName = gameState.disconnectPlayer(socket);
+        let playerName = gameState.setIsConnected(socket, false);
         if (playerName) {
             broadcastError(io.sockets, `Player disconnected: ${playerName}`);
             broadcastState(io.sockets, gameState);
         }
+    });
+
+    socket.on('reconnect', function () {
+        console.log('Socket reconnecting: ', socket.id);
+        gameState.setIsConnected(socket, true);
     });
 
     socket.on("connectWithPlayerName", function (playerName: String) {
