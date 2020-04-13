@@ -113,6 +113,10 @@ io.on('connection', (socket: Socket) => {
             broadcastInfo(io.sockets, `Round ${gameState.round} is over, congratulations!`);
             gameState.moveToNextRound();
             broadcastNewRound(io.sockets, gameState.round);
+
+            if(gameState.regainOneLife()) {
+                broadcastInfo(io.sockets, "You regained one ❤");
+            }
         }
 
         broadcastState(io.sockets, gameState);

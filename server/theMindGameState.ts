@@ -52,6 +52,14 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
         console.log(`Players for round ${this.round} will be ${JSON.stringify(this.players)}`);
     }
 
+    regainOneLife(): boolean {
+        if(this.lives < this.players.length) {
+            this.lives++;
+            return true;
+        }
+        return false;
+    }
+
     randomNewCard(cardsAlreadyGiven: number[]) {
         let randomNewCard: number;
         do {
