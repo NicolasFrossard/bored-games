@@ -15,7 +15,7 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
         this.lives = 0;
     }
 
-    startTheGame() : void {
+    startTheGame(): void {
         super.startTheGame();
         this.lives = this.players.length;
     }
@@ -25,7 +25,7 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
         this.round = 0;
     }
 
-    addNewPlayer(socket: Socket, playerName: String) : void {
+    addNewPlayer(socket: Socket, playerName: String): void {
         super.addNewPlayer(socket, playerName);
     }
 
@@ -60,12 +60,23 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
         return randomNewCard;
     }
 
-    playCard(card: number): boolean {
-        if (this.cardsPlayed.includes(card)) {
-            console.error(`The card ${card} was already played. This should not be possible`);
+    playCard(cardPlayed: number): number[] {
+        let cardsInPlayerHandsThatAreBelow: number[] = [];
+        if (this.cardsPlayed.includes(cardPlayed)) {
+            console.error(`The card ${cardPlayed} was already played. This should not be possible`);
         }
-        this.cardsPlayed.push(card);
-        return true;
+
+        for (const player of this.players) {
+            for (const playerCard of player.cardsInHand) {
+                if (playerCard < cardPlayed && !this.cardsPlayed.includes(playerCard)) {
+                    cardsInPlayerHandsThatAreBelow.push(playerCard);
+                    this.cardsPlayed.push(playerCard);
+                }
+            }
+        }
+
+        this.cardsPlayed.push(cardPlayed);
+        return cardsInPlayerHandsThatAreBelow;
     }
 
     isCurrentRoundFinished() {

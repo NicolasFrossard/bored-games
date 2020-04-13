@@ -2,11 +2,11 @@ import {Namespace, Socket} from "socket.io";
 import {LogEntry, LogEntryType, State} from "index";
 
 export const broadcastInfo = (sockets: Namespace, message: String) => {
-    broadcast(sockets, "INFO", message)
+    broadcast(sockets, "INFO", message);
 };
 
 export const broadcastWarning = (sockets: Namespace, message: String) => {
-    broadcast(sockets, "WARN", message)
+    broadcast(sockets, "WARN", message);
 };
 
 export const sendWarning = (socket: Socket, message: String) => {
@@ -14,7 +14,11 @@ export const sendWarning = (socket: Socket, message: String) => {
 };
 
 export const broadcastError = (sockets: Namespace, message: String) => {
-    broadcast(sockets, "ERROR", message)
+    broadcast(sockets, "ERROR", message);
+};
+
+export const broadcastGameLost = (sockets: Namespace, round: number) => {
+    sockets.emit("gameLost", round);
 };
 
 export const broadcast = (sockets: Namespace, type: LogEntryType, message: String) => {

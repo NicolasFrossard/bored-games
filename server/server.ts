@@ -1,6 +1,14 @@
 import * as express from "express";
 import {Socket} from "socket.io";
-import {broadcastError, broadcastInfo, broadcastState, broadcastWarning, sendGameState, sendWarning} from "./broadcasting"
+import {
+    broadcastError,
+    broadcastGameLost,
+    broadcastInfo,
+    broadcastState,
+    broadcastWarning,
+    sendGameState,
+    sendWarning
+} from "./broadcasting"
 import {TheMindGameState} from "./theMindGameState";
 
 let gameState = new TheMindGameState([]);
@@ -80,17 +88,27 @@ io.on('connection', (socket: Socket) => {
 
     socket.on('playCard', function (card: number) {
         console.log(`Player ${socket.id} is playing the card ${card}`);
-        gameState.playCard(card);
+        const cardsInPlayerHandsThatAreBelow = gameState.playCard(card);
 
         const player = gameState.getPlayerWithSocketId(socket.id);
         broadcastInfo(io.sockets, `${player?.name} has played the card ${card}`);
 
-        if(gameState.isCurrentRoundFinished()) {
+        if(cardsInPlayerHandsThatAreBelow.length > 0) {
+            broadcastWarning(io.sockets,`Dang! The following cards were still held by players: ${cardsInPlayerHandsThatAreBelow}`);
+            gameState.lives--;
+
+            if(gameState.lives > 0) {
+                broadcastInfo(io.sockets, `Losing one life. Lives remaining: ${gameState.lives}`);
+            } else {
+                broadcastGameLost(io.sockets, gameState.round);
+                gameState.stopTheGame();
+            }
+        }
+
+        if(gameState.isCurrentRoundFinished() && gameState.lives > 0) {
             broadcastInfo(io.sockets, `Round ${gameState.round} is over, congratulations!`);
             gameState.moveToNextRound();
             broadcastInfo(io.sockets, `Starting round ${gameState.round}`);
-        } else {
-            console.log('Round is not done yet')
         }
 
         broadcastState(io.sockets, gameState);
