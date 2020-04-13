@@ -1,6 +1,6 @@
 import * as express from "express";
 import {Socket} from "socket.io";
-import {broadcastError, broadcastInfo, broadcastState, broadcastWarning} from "./broacasting"
+import {broadcastError, broadcastInfo, broadcastState, broadcastWarning} from "./broadcasting"
 import {TheMindGameState} from "./theMindGameState";
 
 let gameState = new TheMindGameState([]);
@@ -82,10 +82,6 @@ io.on('connection', (socket: Socket) => {
         broadcastState(io.sockets, gameState);
     });
 });
-
-// setInterval(() => {
-//     io.sockets.emit('state', gameState);
-// }, 1000 / 60);
 
 const server = http.listen(3000, function () {
     console.log("listening on *:3000");
