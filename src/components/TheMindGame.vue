@@ -24,7 +24,7 @@
         </el-col>
       </el-row>
     </el-col>
-    <el-col :span="10">
+    <el-col :span="10" id="last-card-played">
       <el-button v-if="gameState.cardsPlayed.length > 0" class="card last-played" plain>
         {{gameState.cardsPlayed[gameState.cardsPlayed.length-1]}}
       </el-button>
@@ -53,12 +53,15 @@ export default {
       this.$emit('playCard', card);
     },
     canPlayCardAtIndex: function (cards, index) {
-      for(let i = 0; i < index; i++) {
-        if(! this.gameState.cardsPlayed.includes(cards[i])) {
+      for (let i = 0; i < index; i++) {
+        if (!this.gameState.cardsPlayed.includes(cards[i])) {
           return false;
         }
       }
       return true;
+    },
+    generateIdForCard(card) {
+      return `player-card-${card}`
     }
   }
 }

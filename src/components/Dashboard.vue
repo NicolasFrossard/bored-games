@@ -98,12 +98,13 @@ export default {
     initSocket: function () {
       console.log('Initializing socket')
       this.sockets.subscribe('gameLog', (gameLogInfo) => {
-        this.logEntries.unshift(gameLogInfo)
+        this.logEntries.unshift(gameLogInfo);
         if(gameLogInfo.type === 'ERROR') {
           this.$message.error(gameLogInfo.text);
         } else if(gameLogInfo.type === 'WARN') {
           this.$message.warning(gameLogInfo.text);
         }
+        this.highlightLatestLogEntry();
       });
       this.sockets.subscribe('serverWarning', (message) => {
         this.$message.warning(message);
@@ -123,9 +124,12 @@ export default {
       this.sockets.subscribe('errorMade', (cards) => {
         this.$message.warning(`Dang! The following cards, still held by players, were played: ${cards}`);
         this.playSoundErrorMade();
+        this.flipCards(cards);
       });
       this.sockets.subscribe('cardWellPlayed', (card) => {
         this.playSoundCardPlayed();
+        this.highlightLastCardPlayed();
+        this.flipCards([card]);
       });
       this.sockets.subscribe('newRound', (round) => {
         this.$message.info(`Starting round ${round}`);
@@ -143,7 +147,6 @@ export default {
       this.$socket.emit('stopTheGame')
     },
     playCard: function (card) {
-      console.log('playing sound...')
       this.$socket.emit('playCard', card)
     },
     deletePlayer: function (playerName) {
@@ -159,13 +162,13 @@ export default {
       this.playSound('http://soundbible.com/mp3/Boxing%20Bell%20Start%20Round-SoundBible.com-1691615580.mp3', 0.05)
     },
     playSoundNewRound () {
-      this.playSound('http://soundbible.com/mp3/Ta%20Da-SoundBible.com-1884170640.mp3', 0.05)
+      this.playSound('http://soundbible.com/mp3/Ta%20Da-SoundBible.com-1884170640.mp3', 0.03)
     },
     playSoundLostGame () {
       this.playSound('http://soundbible.com/mp3/Sad_Trombone-Joe_Lamb-665429450.mp3', 0.05)
     },
     playSoundErrorMade () {
-      this.playSound('http://soundbible.com/mp3/Computer%20Error-SoundBible.com-399240903.mp3', 0.2)
+      this.playSound('http://soundbible.com/mp3/Computer%20Error-SoundBible.com-399240903.mp3', 0.05)
     },
     playSoundCardPlayed () {
       this.playSound('http://soundbible.com/mp3/Button_Press_2-Marianne_Gagnon-1415267358.mp3', 0.2)
@@ -174,6 +177,30 @@ export default {
       let audio = new Audio(sound);
       audio.volume = volume;
       audio.play();
+    },
+    highlightLastCardPlayed() {
+      this.animateCSS("#last-card-played", "tada", "fast");
+    },
+    highlightLatestLogEntry() {
+      this.animateCSS("#game-log-table > div.el-table__body-wrapper.is-scrolling-none > table > tbody > tr:nth-child(1)", "slideInLeft", "faster");
+    },
+    flipCards(cards) {
+      cards.forEach(card => this.animateCSS(`#player-card-${card}`, "slideInLeft", "fast"));
+    },
+    animateCSS(element, animationName, option) {
+      console.log(`animating element ${element}`)
+      const node = document.querySelector(element)
+      if(!node) {
+        console.error(`Could not find element ${element}`)
+        return;
+      }
+
+      node.classList.add('animated', animationName, option)
+      function handleAnimationEnd() {
+        node.classList.remove('animated', animationName)
+        node.removeEventListener('animationend', handleAnimationEnd)
+      }
+      node.addEventListener('animationend', handleAnimationEnd)
     }
   }
 }
@@ -182,9 +209,5 @@ export default {
 <style>
   div.dashboard {
     margin-top: 15px;
-  }
-  .bored-game-sidebar-cell-style {
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
   }
 </style>

@@ -81,6 +81,7 @@ export class BaseGameState implements State {
     }
 
     isPlayerAdmin(socket: Socket) : boolean {
-        return this.getPlayerWithSocketId(socket.id).isAdmin;
+        const player = this.getPlayerWithSocketId(socket.id);
+        return player?.isAdmin;
     }
 }
