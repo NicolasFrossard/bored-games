@@ -60,6 +60,9 @@ export default {
           this.$message.warning(gameLogInfo.text);
         }
       });
+      this.sockets.subscribe('serverWarning', (message) => {
+        this.$message.warning(message);
+      });
       this.sockets.subscribe('gameState', (gameState) => {
         this.gameState = gameState;
       });

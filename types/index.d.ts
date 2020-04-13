@@ -14,6 +14,7 @@ export interface Player {
     name: String;
     connected: boolean;
     cardsInHand: number[];
+    isAdmin: boolean;
 }
 
 export interface LogEntry {

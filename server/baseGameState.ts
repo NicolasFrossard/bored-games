@@ -45,6 +45,7 @@ export class BaseGameState implements State {
             name: playerName,
             connected: true,
             cardsInHand: [],
+            isAdmin: this.players.length === 0, // the very first player is admin
         };
         this.players.push(newPlayer);
     }
@@ -66,5 +67,9 @@ export class BaseGameState implements State {
 
     stopTheGame() : void {
         this.status = "TO_BE_STARTED";
+    }
+
+    isPlayerAdmin(socket: Socket) : boolean {
+        return this.getPlayerWithSocketId(socket.id).isAdmin;
     }
 }

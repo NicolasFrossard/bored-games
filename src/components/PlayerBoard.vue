@@ -6,7 +6,16 @@
         <i v-else class="el-icon-circle-close notConnected"></i>
       </template>
     </el-table-column>
-    <el-table-column prop="name" label="Players" />
+    <el-table-column prop="name" label="Players">
+      <template slot-scope="scope">
+        {{scope.row.name}}
+      </template>
+    </el-table-column>
+    <el-table-column>
+      <template slot-scope="scope">
+        <span v-if="scope.row.isAdmin">👑</span>
+      </template>
+    </el-table-column>
   </el-table>
 </template>
 

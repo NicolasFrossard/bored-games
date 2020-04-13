@@ -1,4 +1,4 @@
-import {Namespace} from "socket.io";
+import {Namespace, Socket} from "socket.io";
 import {LogEntry, LogEntryType, State} from "index";
 
 export const broadcastInfo = (sockets: Namespace, message: String) => {
@@ -7,6 +7,10 @@ export const broadcastInfo = (sockets: Namespace, message: String) => {
 
 export const broadcastWarning = (sockets: Namespace, message: String) => {
     broadcast(sockets, "WARN", message)
+};
+
+export const sendWarning = (socket: Socket, message: String) => {
+    socket.emit('serverWarning', message);
 };
 
 export const broadcastError = (sockets: Namespace, message: String) => {

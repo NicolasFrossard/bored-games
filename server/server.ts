@@ -1,6 +1,6 @@
 import * as express from "express";
 import {Socket} from "socket.io";
-import {broadcastError, broadcastInfo, broadcastState, broadcastWarning} from "./broadcasting"
+import {broadcastError, broadcastInfo, broadcastState, broadcastWarning, sendWarning} from "./broadcasting"
 import {TheMindGameState} from "./theMindGameState";
 
 let gameState = new TheMindGameState([]);
@@ -49,6 +49,11 @@ io.on('connection', (socket: Socket) => {
     });
 
     socket.on('startTheGame', function () {
+        if(!gameState.isPlayerAdmin(socket)) {
+            sendWarning(socket, "Only the admin can do that");
+            return;
+        }
+
         console.log('Starting the game');
         gameState.startTheGame();
         gameState.moveToNextRound();
@@ -58,6 +63,11 @@ io.on('connection', (socket: Socket) => {
     });
 
     socket.on('stopTheGame', function () {
+        if(!gameState.isPlayerAdmin(socket)) {
+            sendWarning(socket, "Only the admin can do that");
+            return;
+        }
+
         console.log('Stopping the game');
         gameState.stopTheGame();
         broadcastInfo(io.sockets, 'Game was stopped!');
