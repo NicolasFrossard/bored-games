@@ -6,11 +6,15 @@
           <span class="player-name">{{player.name}}</span>
         </el-col>
         <el-col>
-          <template v-for="card in player.cardsInHand">
+          <template v-for="(card, index) in player.cardsInHand">
             <el-button v-if="gameState.cardsPlayed.includes(card)" class="card large" plain>
               ✓
             </el-button>
-            <el-button v-else-if="player.socketId === mySocketId" class="card large own-non-played-card" plain @click="playCard(card)">
+            <el-button v-else-if="player.socketId === mySocketId && canPlayCardAtIndex(player.cardsInHand, index)"
+                       class="card large own-non-played-card" plain @click="playCard(card)">
+              {{card}}
+            </el-button>
+            <el-button v-else-if="player.socketId === mySocketId" class="card large own-non-played-card" plain disabled>
               {{card}}
             </el-button>
             <el-button v-else class="card large other-non-played-card" plain>
@@ -47,6 +51,14 @@ export default {
   methods: {
     playCard: function (card) {
       this.$emit('playCard', card);
+    },
+    canPlayCardAtIndex: function (cards, index) {
+      for(let i = 0; i < index; i++) {
+        if(! this.gameState.cardsPlayed.includes(cards[i])) {
+          return false;
+        }
+      }
+      return true;
     }
   }
 }
