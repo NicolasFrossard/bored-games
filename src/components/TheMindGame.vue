@@ -6,7 +6,7 @@
           <span class="player-name">{{player.name}}</span>
         </el-row>
         <el-row justify="center">
-            <el-col v-for="(card, index) in player.cardsInHand" :offset="calculateOffset(index, player.cardsInHand.length)"
+            <el-col v-for="(card, index) in player.cardsInHand" :key="card" :offset="calculateOffset(index, player.cardsInHand.length)"
                     :id="generateIdForCard(card)" class="card-container">
               <el-button v-if="gameState.cardsPlayed.includes(card)" class="card large" plain>
                 ✓

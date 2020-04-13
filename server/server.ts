@@ -88,8 +88,14 @@ io.on('connection', (socket: Socket) => {
         broadcastState(io.sockets, gameState);
     });
 
-    socket.on('playCard', function (card: number) {
-        console.log(`Player ${socket.id} is playing the card ${card}`);
+    socket.on('playCard', function (card: number, round: number) {
+        console.log(`Player ${socket.id} is playing the card ${card} in round ${round}`);
+
+        if(gameState.round !== round) {
+            console.warn(`Got a card for round ${round} but it's round ${gameState.round}`)
+            return;
+        }
+
         const cardsInPlayerHandsThatAreBelow = gameState.playCard(card);
 
         const player = gameState.getPlayerWithSocketId(socket.id);

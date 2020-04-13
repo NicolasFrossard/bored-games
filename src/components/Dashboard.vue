@@ -154,7 +154,7 @@ export default {
       this.$socket.emit('stopTheGame')
     },
     playCard: function (card) {
-      this.$socket.emit('playCard', card)
+      this.$socket.emit('playCard', card, this.gameState.round)
     },
     deletePlayer: function (playerName) {
       this.$socket.emit('deletePlayer', playerName)
