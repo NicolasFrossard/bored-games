@@ -96,7 +96,7 @@ io.on('connection', (socket: Socket) => {
             return;
         }
 
-        if(this.cardsPlayed.includes(card)) {
+        if(gameState.cardsPlayed.includes(card)) {
             console.error(`The card ${card} was already played. This should not be possible. Aborting`);
             return;
         }
