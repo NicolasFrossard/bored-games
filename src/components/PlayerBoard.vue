@@ -21,7 +21,7 @@
         <span v-if="scope.row.isAdmin">👑</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="gameState.status !== 'STARTED'">
+    <el-table-column v-if="showDeletePlayer && gameState.status !== 'STARTED'">
       <template slot-scope="scope">
         <el-button type="primary" size="small" @click="deletePlayer(scope.row.name)" plain :disabled="scope.row.socketId === mySocketId">
           Delete player
@@ -42,6 +42,10 @@ export default {
     mySocketId: {
       type: String,
       required: true,
+    },
+    showDeletePlayer: {
+      type: Boolean,
+      default: true,
     }
   },
   methods: {

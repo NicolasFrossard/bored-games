@@ -30,7 +30,7 @@
       </el-row>
       <el-row class="dashboard">
         <el-col :span="8" :offset="8">
-          <player-board v-if="gameState && gameState.players.length > 0" :game-state="gameState" :my-socket-id="mySocketId"></player-board>
+          <player-board v-if="gameState && gameState.players.length > 0" :show-delete-player="false" :game-state="gameState" :my-socket-id="mySocketId"></player-board>
         </el-col>
       </el-row>
     </el-row>
