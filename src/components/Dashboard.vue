@@ -21,7 +21,7 @@
       </el-dialog>
       <el-col :span="16">
         <div>
-          <game-admin v-if="gameState" :game-state="gameState" @onStartTheGame="startTheGame" @onStopTheGame="stopTheGame"></game-admin>
+          <game-admin v-if="gameState" :game-state="gameState" @onStartTheGame="startTheGame" @onStopTheGame="stopTheGame" @testSound="playSoundNewRound"></game-admin>
           <the-mind-game v-if="gameState && gameState.status === 'STARTED'" :game-state="gameState" :my-socket-id="mySocketId" @playCard="playCard"></the-mind-game>
         </div>
       </el-col>
@@ -117,6 +117,7 @@ export default {
         this.mySocketId = socketId;
       });
       this.sockets.subscribe('gameLost', (round) => {
+        this.playSoundLostGame();
         this.gameOverRoundAchieved = round;
         this.gameOverDialogVisible = true;
       });
@@ -131,6 +132,7 @@ export default {
       this.$socket.emit('stopTheGame')
     },
     playCard: function (card) {
+      console.log('playing sound...')
       this.$socket.emit('playCard', card)
     },
     deletePlayer: function (playerName) {
@@ -142,6 +144,23 @@ export default {
     openGooseVideo: function () {
       window.open('https://youtu.be/AbE9VIQy5zQ?t=15')
     },
+    playSoundNewRound () {
+      this.playSound('http://soundbible.com/mp3/Ta%20Da-SoundBible.com-1884170640.mp3', 0.05)
+    },
+    playSoundLostGame () {
+      this.playSound('http://soundbible.com/mp3/Sad_Trombone-Joe_Lamb-665429450.mp3', 0.05)
+    },
+    playSoundErrorMade () {
+      this.playSound('http://soundbible.com/mp3/Computer%20Error-SoundBible.com-399240903.mp3', 0.2)
+    },
+    playSoundCardPlayed () {
+      this.playSound('http://soundbible.com/mp3/Button_Press_2-Marianne_Gagnon-1415267358.mp3', 0.2)
+    },
+    playSound (sound, volume) {
+      let audio = new Audio(sound);
+      audio.volume = volume;
+      audio.play();
+    }
   }
 }
 </script>
