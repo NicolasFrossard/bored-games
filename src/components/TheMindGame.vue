@@ -2,26 +2,27 @@
   <el-row>
     <el-col :span="14">
       <el-row class="spaced" v-for="player in gameState.players" v-bind:key="player.socketId">
-        <el-col>
+        <el-row>
           <span class="player-name">{{player.name}}</span>
-        </el-col>
-        <el-col>
-          <template v-for="(card, index) in player.cardsInHand">
-            <el-button v-if="gameState.cardsPlayed.includes(card)" class="card large" plain>
-              ✓
-            </el-button>
-            <el-button v-else-if="player.socketId === mySocketId && canPlayCardAtIndex(player.cardsInHand, index)"
-                       class="card large own-non-played-card" plain @click="playCard(card)">
-              {{card}}
-            </el-button>
-            <el-button v-else-if="player.socketId === mySocketId" class="card large own-non-played-card" plain disabled>
-              {{card}}
-            </el-button>
-            <el-button v-else class="card large other-non-played-card" plain>
-              ?
-            </el-button>
-          </template>
-        </el-col>
+        </el-row>
+        <el-row justify="center">
+            <el-col v-for="(card, index) in player.cardsInHand" :offset="calculateOffset(index, player.cardsInHand.length)"
+                    :id="generateIdForCard(card)" class="card-container">
+              <el-button v-if="gameState.cardsPlayed.includes(card)" class="card large" plain>
+                ✓
+              </el-button>
+              <el-button v-else-if="player.socketId === mySocketId && canPlayCardAtIndex(player.cardsInHand, index)"
+                         class="card large own-non-played-card" plain @click="playCard(card)">
+                {{card}}
+              </el-button>
+              <el-button v-else-if="player.socketId === mySocketId" class="card large own-non-played-card" plain disabled>
+                {{card}}
+              </el-button>
+              <el-button v-else class="card large other-non-played-card" plain>
+                ?
+              </el-button>
+            </el-col>
+        </el-row>
       </el-row>
     </el-col>
     <el-col :span="10" id="last-card-played">
@@ -62,6 +63,13 @@ export default {
     },
     generateIdForCard(card) {
       return `player-card-${card}`
+    },
+    calculateOffset(index, cardCount) {
+      if(index !== 0) {
+        return 0;
+      } else {
+        return 12 - cardCount;
+      }
     }
   }
 }
@@ -96,5 +104,17 @@ export default {
   }
   .player-name {
     font-size: large;
+  }
+  .cards-container {
+    width: 100%;
+    float: left;
+  }
+  .inner-cards-container {
+    width: 100%;
+    float: left;
+  }
+  .card-container {
+    width: 65px;
+    float: left;
   }
 </style>

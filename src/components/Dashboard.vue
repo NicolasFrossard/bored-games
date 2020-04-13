@@ -185,13 +185,13 @@ export default {
       this.animateCSS("#game-log-table > div.el-table__body-wrapper.is-scrolling-none > table > tbody > tr:nth-child(1)", "slideInLeft", "faster");
     },
     flipCards(cards) {
-      cards.forEach(card => this.animateCSS(`#player-card-${card}`, "slideInLeft", "fast"));
+      cards.forEach(card => this.animateCSS(`#player-card-${card}`, "flip", "faster"));
     },
     animateCSS(element, animationName, option) {
       console.log(`animating element ${element}`)
       const node = document.querySelector(element)
       if(!node) {
-        console.error(`Could not find element ${element}`)
+        console.log(`Could not find element ${element}`)
         return;
       }
 
