@@ -4,7 +4,7 @@ import {
     broadcastCardWellPlayed,
     broadcastError, broadcastErrorMade,
     broadcastGameLost,
-    broadcastInfo, broadcastNewRound,
+    broadcastInfo, broadcastNewGameStarted, broadcastNewRound,
     broadcastState,
     broadcastWarning,
     sendGameState,
@@ -72,6 +72,7 @@ io.on('connection', (socket: Socket) => {
         gameState.moveToNextRound();
         broadcastInfo(io.sockets, 'Game has started!');
         broadcastInfo(io.sockets, 'Starting first round');
+        broadcastNewGameStarted(io.sockets);
         broadcastState(io.sockets, gameState);
     });
 

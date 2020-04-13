@@ -33,6 +33,10 @@ export const broadcastGameLost = (sockets: Namespace, round: number) => {
     sockets.emit("gameLost", round);
 };
 
+export const broadcastNewGameStarted = (sockets: Namespace) => {
+    sockets.emit("newGameStarted");
+};
+
 export const broadcast = (sockets: Namespace, type: LogEntryType, message: String) => {
     const newGameLogEntry: LogEntry = {
         type: type,

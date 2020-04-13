@@ -20,7 +20,10 @@
         </span>
       </el-dialog>
       <el-col :span="16">
-        <div>
+        <div v-if="countdown > 0">
+          <span id="countdown">{{countdown}}</span>
+        </div>
+        <div v-else>
           <game-admin v-if="gameState" :game-state="gameState" @onStartTheGame="startTheGame" @onStopTheGame="stopTheGame" @testSound="playSoundNewRound"></game-admin>
           <the-mind-game v-if="gameState && gameState.status === 'STARTED'" :game-state="gameState" :my-socket-id="mySocketId" @playCard="playCard"></the-mind-game>
         </div>
@@ -85,6 +88,7 @@ export default {
   },
   data () {
     return {
+      countdown: 0,
       logEntries: [],
       playerName: '',
       connectionEstablished: false,
@@ -134,6 +138,11 @@ export default {
       this.sockets.subscribe('newRound', (round) => {
         this.$message.info(`Starting round ${round}`);
         this.playSoundNewRound();
+        this.triggerCountdown();
+      });
+      this.sockets.subscribe('newGameStarted', () => {
+        this.playStartingGame();
+        this.triggerCountdown();
       });
     },
     connect: function () {
@@ -141,7 +150,6 @@ export default {
     },
     startTheGame: function () {
       this.$socket.emit('startTheGame')
-      this.playStartingGame();
     },
     stopTheGame: function () {
       this.$socket.emit('stopTheGame')
@@ -154,6 +162,24 @@ export default {
     },
     getGameState: function () {
       this.$socket.emit('getGameState')
+    },
+    triggerCountdown() {
+      this.countdown = 3;
+      const reduceCountdown = this.reduceCountdown;
+      setTimeout(function () {
+        reduceCountdown();
+        setTimeout(function () {
+          reduceCountdown();
+          setTimeout(function () {
+            reduceCountdown();
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    },
+    reduceCountdown() {
+      if(this.countdown > 0) {
+        this.countdown--;
+      }
     },
     openGooseVideo: function () {
       window.open('https://youtu.be/AbE9VIQy5zQ?t=15')
@@ -209,5 +235,9 @@ export default {
 <style>
   div.dashboard {
     margin-top: 15px;
+  }
+  #countdown {
+    font-size: 200px;
+    font-family: fantasy;
   }
 </style>
