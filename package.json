@@ -11,8 +11,10 @@
     "server": "node tsDist/server.js"
   },
   "dependencies": {
+    "@types/chance": "^1.0.10",
     "@types/express": "^4.17.6",
     "@types/socket.io": "^2.1.4",
+    "chance": "^1.1.4",
     "concurrently": "^5.1.0",
     "element-ui": "^2.13.0",
     "express": "^4.17.1",

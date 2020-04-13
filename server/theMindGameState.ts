@@ -1,6 +1,7 @@
 import {Player} from "index";
 import {BaseGameState} from "./baseGameState";
 import {Socket} from "socket.io";
+import {Chance} from "chance";
 
 export class TheMindGameState extends BaseGameState implements TheMindGameState {
     round: number;
@@ -54,13 +55,9 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
     randomNewCard(cardsAlreadyGiven: number[]) {
         let randomNewCard: number;
         do {
-            randomNewCard = this.getRandomInt(100);
+            randomNewCard = new Chance(Math.random).integer({min: 1, max: 100});
         } while (cardsAlreadyGiven.includes(randomNewCard));
         return randomNewCard;
-    }
-
-    getRandomInt(max: number) {
-        return 1 + Math.floor(Math.random() * Math.floor(max + 1));
     }
 
     playCard(card: number): boolean {

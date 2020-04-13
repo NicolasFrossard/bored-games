@@ -22,8 +22,11 @@
           </el-input>
         </el-col>
       </el-row>
-      <el-row class="dashboard">
-        The current game is in status {{gameState.status}}
+      <el-row class="dashboard" v-if="gameState.status === 'STARTED'">
+        A game has been started already. You can only join by using the name of a disconnected player.
+      </el-row>
+      <el-row class="dashboard" v-else>
+        The game has not been started yet. Come and join!
       </el-row>
       <el-row class="dashboard">
         <el-col :span="8" :offset="8">
@@ -33,10 +36,13 @@
     </el-row>
     <el-row v-else>
       <div class="dashboard">
-        We don't like geese over here. Please confirm that you are not a goose:
+        Before connecting to the server, please confirm that you are not a goose:
       </div>
       <div class="dashboard">
-        <el-button @click="getGameState" icon="el-icon-check" >I am not a goose</el-button>
+        <el-button @click="getGameState" type="primary">I am not a goose</el-button>
+      </div>
+      <div class="dashboard">
+        <el-button @click="openGooseVideo">Actually, I am a goose</el-button>
       </div>
     </el-row>
   </el-row>
@@ -108,6 +114,9 @@ export default {
     },
     getGameState: function () {
       this.$socket.emit('getGameState')
+    },
+    openGooseVideo: function () {
+      window.open('https://youtu.be/AbE9VIQy5zQ?t=15')
     },
   }
 }
