@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="players" style="width: 100%">
+  <el-table :data="players" style="width: 100%" cell-class-name="bored-game-sidebar-cell-style">
     <el-table-column prop="connected" width="40">
       <template slot-scope="scope">
         <i v-if="scope.row.connected" class="el-icon-circle-check connected"></i>

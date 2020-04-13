@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="entries" height="600px" style="width: 100%">
+  <el-table :data="entries" height="600px" style="width: 100%" cell-class-name="bored-game-sidebar-cell-style">
     <el-table-column prop="icon" width="40">
       <template slot-scope="scope">
         <i v-if="scope.row.type === 'INFO'" class="el-icon-info info-game-log"></i>
@@ -8,7 +8,7 @@
       </template>
     </el-table-column>
     <el-table-column prop="text" label="What happened?"></el-table-column>
-    <el-table-column prop="date" label="When?" width="100"></el-table-column>
+    <el-table-column prop="date" label="When?" width="120"></el-table-column>
   </el-table>
 </template>
 
@@ -24,7 +24,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
   i.info-game-log {
     color: dodgerblue;
   }

@@ -3,7 +3,7 @@
     <el-row v-if="connectionEstablished">
       <el-col :span="16">
         <div>
-          <game-admin :game-state="gameState" @onStartTheGame="startTheGame" @onStopTheGame="stopTheGame"></game-admin>
+          <game-admin v-if="gameState" :game-state="gameState" @onStartTheGame="startTheGame" @onStopTheGame="stopTheGame"></game-admin>
           <the-mind-game v-if="gameState && gameState.status === 'STARTED'" :game-state="gameState" :my-socket-id="mySocketId" @playCard="playCard"></the-mind-game>
         </div>
       </el-col>
@@ -87,5 +87,9 @@ export default {
 <style>
   div.dashboard {
     margin-top: 10px;
+  }
+  .bored-game-sidebar-cell-style {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
   }
 </style>
