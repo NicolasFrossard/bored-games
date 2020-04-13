@@ -9,7 +9,7 @@
       </el-col>
       <el-col :span="8">
         <div>
-          <player-board v-if="gameState" :players="gameState.players"></player-board>
+          <player-board v-if="gameState" :game-state="gameState" :my-socket-id="mySocketId" @deletePlayer="deletePlayer"></player-board>
           <game-log :entries="logEntries"></game-log>
         </div>
       </el-col>
@@ -82,6 +82,9 @@ export default {
     },
     playCard: function (card) {
       this.$socket.emit('playCard', card)
+    },
+    deletePlayer: function (playerName) {
+      this.$socket.emit('deletePlayer', playerName)
     },
   }
 }

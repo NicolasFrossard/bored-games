@@ -91,6 +91,16 @@ io.on('connection', (socket: Socket) => {
 
         broadcastState(io.sockets, gameState);
     });
+
+    socket.on('deletePlayer', function (playerName: string) {
+        if (!gameState.isPlayerAdmin(socket)) {
+            sendWarning(socket, "Only the admin can do that");
+            return;
+        }
+        gameState.deletePlayer(playerName);
+        broadcastInfo(io.sockets, `Player ${playerName} has been deleted`);
+        broadcastState(io.sockets, gameState);
+    });
 });
 
 const server = http.listen(3000, function () {

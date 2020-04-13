@@ -11,7 +11,12 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
         super(players);
         this.round = 0;
         this.cardsPlayed = [];
-        this.lives = players.length;
+        this.lives = 0;
+    }
+
+    startTheGame() : void {
+        super.startTheGame();
+        this.lives = this.players.length;
     }
 
     stopTheGame(): void {
@@ -21,7 +26,6 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
 
     addNewPlayer(socket: Socket, playerName: String) : void {
         super.addNewPlayer(socket, playerName);
-        this.lives++;
     }
 
     moveToNextRound(): void {

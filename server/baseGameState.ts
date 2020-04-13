@@ -50,6 +50,17 @@ export class BaseGameState implements State {
         this.players.push(newPlayer);
     }
 
+    deletePlayer(playerName: String) {
+        let newPlayers = [];
+        for (let i = 0; i < this.players.length; i++) {
+            const player = this.players[i];
+            if(player.name !== playerName) {
+                newPlayers.push(player);
+            }
+        }
+        this.players = newPlayers;
+    }
+
     setIsConnected(socket: Socket, isConnected: boolean) : String {
         for (let i = 0; i < this.players.length; i++) {
             const player = this.players[i];
