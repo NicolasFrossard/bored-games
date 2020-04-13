@@ -56,7 +56,7 @@ io.on('connection', (socket: Socket) => {
             broadcastInfo(io.sockets, `New player connected: ${playerName}`);
             broadcastState(io.sockets, gameState);
         } else {
-            broadcastWarning(io.sockets, `Rejected player ${playerName} as the game started already. Sorry, dude.`);
+            sendWarning(socket, `Rejected player ${playerName} as the game started already. Sorry, dude.`);
         }
     });
 
@@ -94,7 +94,7 @@ io.on('connection', (socket: Socket) => {
         broadcastInfo(io.sockets, `${player?.name} has played the card ${card}`);
 
         if(cardsInPlayerHandsThatAreBelow.length > 0) {
-            broadcastWarning(io.sockets,`Dang! The following cards were still held by players: ${cardsInPlayerHandsThatAreBelow}`);
+            broadcastWarning(io.sockets,`Dang! The following cards, still held by players, were played: ${cardsInPlayerHandsThatAreBelow}`);
             gameState.lives--;
 
             if(gameState.lives > 0) {

@@ -71,8 +71,8 @@ export default {
     font-weight: bold;
   }
   .el-button.large {
-     padding: 20px 10px;
-     font-size: 28px;
+    padding: 20px 10px;
+    font-size: 28px;
   }
   .el-button.last-played {
     margin-top: 100px;

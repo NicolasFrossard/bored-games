@@ -1,6 +1,24 @@
 <template>
   <el-row class="dashboard">
     <el-row v-if="connectionEstablished">
+      <el-dialog title="Game over!" :visible.sync="gameOverDialogVisible" width="60%">
+        <el-row class="dashboard">
+          <span>You lost at round <b>{{gameOverRoundAchieved}}</b>!</span>
+        </el-row>
+        <el-row class="dashboard">
+          <span>You made it to the following rank:</span>
+        </el-row>
+        <el-row class="dashboard">
+          <img src="../assets/gameOver/pathetic.jpg" width="50%" v-if="gameOverRoundAchieved <= 3">
+          <img src="../assets/gameOver/not-bad.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 5">
+          <img src="../assets/gameOver/good-job.jpg" width="33%" v-else-if="gameOverRoundAchieved <= 6">
+          <img src="../assets/gameOver/amazing.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 7">
+          <img src="../assets/gameOver/awesome.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 8">
+        </el-row>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="gameOverDialogVisible = false">I acknowledge my failure as a player</el-button>
+        </span>
+      </el-dialog>
       <el-col :span="16">
         <div>
           <game-admin v-if="gameState" :game-state="gameState" @onStartTheGame="startTheGame" @onStopTheGame="stopTheGame"></game-admin>
@@ -72,6 +90,8 @@ export default {
       connectionEstablished: false,
       gameState: undefined,
       mySocketId: '',
+      gameOverDialogVisible: false,
+      gameOverRoundAchieved: -1,
     }
   },
   methods: {
@@ -82,6 +102,7 @@ export default {
         if(gameLogInfo.type === 'ERROR') {
           this.$message.error(gameLogInfo.text);
         } else if(gameLogInfo.type === 'WARN') {
+            console.log("one waring")
           this.$message.warning(gameLogInfo.text);
         }
       });
@@ -89,12 +110,15 @@ export default {
         this.$message.warning(message);
       });
       this.sockets.subscribe('gameState', (gameState) => {
-        console.log('Got game state')
         this.gameState = gameState;
       });
       this.sockets.subscribe('connectionSuccessful', (socketId) => {
         this.connectionEstablished = true;
         this.mySocketId = socketId;
+      });
+      this.sockets.subscribe('gameLost', (round) => {
+        this.gameOverRoundAchieved = round;
+        this.gameOverDialogVisible = true;
       });
     },
     connect: function () {
