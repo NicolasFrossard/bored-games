@@ -70,10 +70,6 @@ export class TheMindGameState extends BaseGameState implements TheMindGameState 
 
     playCard(cardPlayed: number): number[] {
         let cardsInPlayerHandsThatAreBelow: number[] = [];
-        if (this.cardsPlayed.includes(cardPlayed)) {
-            console.error(`The card ${cardPlayed} was already played. This should not be possible`);
-        }
-
         for (const player of this.players) {
             for (const playerCard of player.cardsInHand) {
                 if (playerCard < cardPlayed && !this.cardsPlayed.includes(playerCard)) {

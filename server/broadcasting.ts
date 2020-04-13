@@ -48,7 +48,7 @@ export const broadcast = (sockets: Namespace, type: LogEntryType, message: Strin
 };
 
 export const broadcastState = (sockets: Namespace, gameState: State) => {
-    console.log(`Broadcasting state ${gameState}`);
+    console.log(`Broadcasting state ${JSON.stringify(gameState)}`);
     sockets.emit('gameState', gameState);
 };
 

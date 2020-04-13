@@ -92,7 +92,12 @@ io.on('connection', (socket: Socket) => {
         console.log(`Player ${socket.id} is playing the card ${card} in round ${round}`);
 
         if(gameState.round !== round) {
-            console.warn(`Got a card for round ${round} but it's round ${gameState.round}`)
+            console.warn(`Got a card for round ${round} but it's round ${gameState.round}. Aborting`);
+            return;
+        }
+
+        if(this.cardsPlayed.includes(card)) {
+            console.error(`The card ${card} was already played. This should not be possible. Aborting`);
             return;
         }
 
