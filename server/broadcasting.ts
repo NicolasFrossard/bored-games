@@ -17,6 +17,18 @@ export const broadcastError = (sockets: Namespace, message: String) => {
     broadcast(sockets, "ERROR", message);
 };
 
+export const broadcastCardWellPlayed = (sockets: Namespace, card: number) => {
+    sockets.emit("cardWellPlayed", card);
+};
+
+export const broadcastNewRound = (sockets: Namespace, round: number) => {
+    sockets.emit("newRound", round);
+};
+
+export const broadcastErrorMade = (sockets: Namespace, cardsForcedToPlay: number[]) => {
+    sockets.emit("errorMade", cardsForcedToPlay);
+};
+
 export const broadcastGameLost = (sockets: Namespace, round: number) => {
     sockets.emit("gameLost", round);
 };

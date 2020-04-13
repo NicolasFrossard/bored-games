@@ -1,9 +1,10 @@
 import * as express from "express";
 import {Socket} from "socket.io";
 import {
-    broadcastError,
+    broadcastCardWellPlayed,
+    broadcastError, broadcastErrorMade,
     broadcastGameLost,
-    broadcastInfo,
+    broadcastInfo, broadcastNewRound,
     broadcastState,
     broadcastWarning,
     sendGameState,
@@ -94,7 +95,7 @@ io.on('connection', (socket: Socket) => {
         broadcastInfo(io.sockets, `${player?.name} has played the card ${card}`);
 
         if(cardsInPlayerHandsThatAreBelow.length > 0) {
-            broadcastWarning(io.sockets,`Dang! The following cards, still held by players, were played: ${cardsInPlayerHandsThatAreBelow}`);
+            broadcastErrorMade(io.sockets, cardsInPlayerHandsThatAreBelow);
             gameState.lives--;
 
             if(gameState.lives > 0) {
@@ -103,12 +104,14 @@ io.on('connection', (socket: Socket) => {
                 broadcastGameLost(io.sockets, gameState.round);
                 gameState.stopTheGame();
             }
+        } else {
+            broadcastCardWellPlayed(io.sockets, card);
         }
 
         if(gameState.isCurrentRoundFinished() && gameState.lives > 0) {
             broadcastInfo(io.sockets, `Round ${gameState.round} is over, congratulations!`);
             gameState.moveToNextRound();
-            broadcastInfo(io.sockets, `Starting round ${gameState.round}`);
+            broadcastNewRound(io.sockets, gameState.round);
         }
 
         broadcastState(io.sockets, gameState);

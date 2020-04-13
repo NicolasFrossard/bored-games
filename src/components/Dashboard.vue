@@ -102,7 +102,6 @@ export default {
         if(gameLogInfo.type === 'ERROR') {
           this.$message.error(gameLogInfo.text);
         } else if(gameLogInfo.type === 'WARN') {
-            console.log("one waring")
           this.$message.warning(gameLogInfo.text);
         }
       });
@@ -121,12 +120,24 @@ export default {
         this.gameOverRoundAchieved = round;
         this.gameOverDialogVisible = true;
       });
+      this.sockets.subscribe('errorMade', (cards) => {
+        this.$message.warning(`Dang! The following cards, still held by players, were played: ${cards}`);
+        this.playSoundErrorMade();
+      });
+      this.sockets.subscribe('cardWellPlayed', (card) => {
+        this.playSoundCardPlayed();
+      });
+      this.sockets.subscribe('newRound', (round) => {
+        this.$message.info(`Starting round ${round}`);
+        this.playSoundNewRound();
+      });
     },
     connect: function () {
       this.$socket.emit('connectWithPlayerName', this.playerName)
     },
     startTheGame: function () {
       this.$socket.emit('startTheGame')
+      this.playStartingGame();
     },
     stopTheGame: function () {
       this.$socket.emit('stopTheGame')
@@ -143,6 +154,9 @@ export default {
     },
     openGooseVideo: function () {
       window.open('https://youtu.be/AbE9VIQy5zQ?t=15')
+    },
+    playStartingGame () {
+      this.playSound('http://soundbible.com/mp3/Boxing%20Bell%20Start%20Round-SoundBible.com-1691615580.mp3', 0.05)
     },
     playSoundNewRound () {
       this.playSound('http://soundbible.com/mp3/Ta%20Da-SoundBible.com-1884170640.mp3', 0.05)
