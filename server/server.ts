@@ -1,6 +1,6 @@
 import * as express from "express";
 import {Socket} from "socket.io";
-import {broadcastError, broadcastInfo, broadcastState, broadcastWarning, sendWarning} from "./broadcasting"
+import {broadcastError, broadcastInfo, broadcastState, broadcastWarning, sendGameState, sendWarning} from "./broadcasting"
 import {TheMindGameState} from "./theMindGameState";
 
 let gameState = new TheMindGameState([]);
@@ -15,6 +15,10 @@ app.use(express.static("dist"));
 
 io.on('connection', (socket: Socket) => {
     console.log('Socket connected:', socket.id);
+
+    socket.on('getGameState', function () {
+        sendGameState(socket, gameState);
+    });
 
     socket.on('disconnect', function () {
         console.log('Socket disconnected: ', socket.id);
@@ -50,7 +54,7 @@ io.on('connection', (socket: Socket) => {
 
     socket.on('startTheGame', function () {
         if(!gameState.isPlayerAdmin(socket)) {
-            sendWarning(socket, "Only the admin can do that");
+            sendWarning(socket, "Only the admin can do that. Please don't be such a goose");
             return;
         }
 
@@ -64,7 +68,7 @@ io.on('connection', (socket: Socket) => {
 
     socket.on('stopTheGame', function () {
         if(!gameState.isPlayerAdmin(socket)) {
-            sendWarning(socket, "Only the admin can do that");
+            sendWarning(socket, "Only the admin can do that. Please don't be such a goose");
             return;
         }
 
@@ -94,7 +98,7 @@ io.on('connection', (socket: Socket) => {
 
     socket.on('deletePlayer', function (playerName: string) {
         if (!gameState.isPlayerAdmin(socket)) {
-            sendWarning(socket, "Only the admin can do that");
+            sendWarning(socket, "Only the admin can do that. Please don't be such a goose");
             return;
         }
         gameState.deletePlayer(playerName);

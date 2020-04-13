@@ -29,3 +29,7 @@ export const broadcast = (sockets: Namespace, type: LogEntryType, message: Strin
 export const broadcastState = (sockets: Namespace, gameState: State) => {
     sockets.emit('gameState', gameState);
 };
+
+export const sendGameState = (socket: Socket, gameState: State) => {
+    socket.emit('gameState', gameState);
+};

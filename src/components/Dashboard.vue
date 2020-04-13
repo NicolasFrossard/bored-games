@@ -14,12 +14,30 @@
         </div>
       </el-col>
     </el-row>
+    <el-row v-else-if="gameState">
+      <el-row class="dashboard">
+        <el-col :span="4" :offset="10">
+          <el-input size="large" maxlength="8" placeholder="Who are you?" v-model="playerName">
+            <el-button slot="append" :disabled="playerName.length === 0" @click="connect">Connect</el-button>
+          </el-input>
+        </el-col>
+      </el-row>
+      <el-row class="dashboard">
+        The current game is in status {{gameState.status}}
+      </el-row>
+      <el-row class="dashboard">
+        <el-col :span="8" :offset="8">
+          <player-board v-if="gameState && gameState.players.length > 0" :game-state="gameState" :my-socket-id="mySocketId"></player-board>
+        </el-col>
+      </el-row>
+    </el-row>
     <el-row v-else>
-      <el-col :span="4" :offset="10">
-        <el-input size="large" maxlength="8" placeholder="Who are you?" v-model="playerName">
-          <el-button slot="append" :disabled="playerName.length === 0" @click="connect">Connect</el-button>
-        </el-input>
-      </el-col>
+      <div class="dashboard">
+        We don't like geese over here. Please confirm that you are not a goose:
+      </div>
+      <div class="dashboard">
+        <el-button @click="getGameState" icon="el-icon-check" >I am not a goose</el-button>
+      </div>
     </el-row>
   </el-row>
 </template>
@@ -52,6 +70,7 @@ export default {
   },
   methods: {
     initSocket: function () {
+      console.log('Initializing socket')
       this.sockets.subscribe('gameLog', (gameLogInfo) => {
         this.logEntries.unshift(gameLogInfo)
         if(gameLogInfo.type === 'ERROR') {
@@ -64,6 +83,7 @@ export default {
         this.$message.warning(message);
       });
       this.sockets.subscribe('gameState', (gameState) => {
+        console.log('Got game state')
         this.gameState = gameState;
       });
       this.sockets.subscribe('connectionSuccessful', (socketId) => {
@@ -86,13 +106,16 @@ export default {
     deletePlayer: function (playerName) {
       this.$socket.emit('deletePlayer', playerName)
     },
+    getGameState: function () {
+      this.$socket.emit('getGameState')
+    },
   }
 }
 </script>
 
 <style>
   div.dashboard {
-    margin-top: 10px;
+    margin-top: 15px;
   }
   .bored-game-sidebar-cell-style {
     padding-top: 5px !important;
