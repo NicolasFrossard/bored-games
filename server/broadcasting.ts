@@ -26,6 +26,7 @@ export const broadcastNewRound = (sockets: Namespace, round: number) => {
 };
 
 export const broadcastErrorMade = (sockets: Namespace, cardsForcedToPlay: number[]) => {
+    broadcastWarning(sockets, `Dang! The following cards, still held by players, were played: ${cardsForcedToPlay}`);
     sockets.emit("errorMade", cardsForcedToPlay);
 };
 
@@ -47,6 +48,7 @@ export const broadcast = (sockets: Namespace, type: LogEntryType, message: Strin
 };
 
 export const broadcastState = (sockets: Namespace, gameState: State) => {
+    console.log(`Broadcasting state ${gameState}`);
     sockets.emit('gameState', gameState);
 };
 

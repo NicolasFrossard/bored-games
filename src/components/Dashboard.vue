@@ -126,7 +126,6 @@ export default {
         this.gameOverDialogVisible = true;
       });
       this.sockets.subscribe('errorMade', (cards) => {
-        this.$message.warning(`Dang! The following cards, still held by players, were played: ${cards}`);
         this.playSoundErrorMade();
         this.flipCards(cards);
       });

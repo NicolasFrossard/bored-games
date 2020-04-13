@@ -96,6 +96,7 @@ io.on('connection', (socket: Socket) => {
         broadcastInfo(io.sockets, `${player?.name} has played the card ${card}`);
 
         if(cardsInPlayerHandsThatAreBelow.length > 0) {
+            console.log(`An error was made. Cards below are ${cardsInPlayerHandsThatAreBelow}`);
             broadcastErrorMade(io.sockets, cardsInPlayerHandsThatAreBelow);
             gameState.lives--;
 
