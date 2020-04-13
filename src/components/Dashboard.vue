@@ -10,10 +10,10 @@
         </el-row>
         <el-row class="dashboard">
           <img src="../assets/gameOver/pathetic.jpg" width="50%" v-if="gameOverRoundAchieved <= 3">
-          <img src="../assets/gameOver/not-bad.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 5">
-          <img src="../assets/gameOver/good-job.jpg" width="33%" v-else-if="gameOverRoundAchieved <= 6">
-          <img src="../assets/gameOver/amazing.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 7">
-          <img src="../assets/gameOver/awesome.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 8">
+          <img src="../assets/gameOver/not-bad.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 4">
+          <img src="../assets/gameOver/good-job.jpg" width="33%" v-else-if="gameOverRoundAchieved <= 5">
+          <img src="../assets/gameOver/amazing.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 6">
+          <img src="../assets/gameOver/awesome.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 7">
         </el-row>
         <span slot="footer" class="dialog-footer">
           <el-button @click="gameOverDialogVisible = false">I acknowledge my failure as a player</el-button>

@@ -7,8 +7,13 @@
       <el-tag type="success">Game has started</el-tag>
       <el-tag v-if="gameState.status === 'STARTED'">Round {{gameState.round}}</el-tag>
       <el-tag>
-        <span v-for="live of gameState.lives">
-          ❤️
+        <span v-for="(player, index) of gameState.players">
+          <span v-if="(index+1) <= gameState.lives">
+            ❤️
+          </span>
+          <span v-else>
+            🤍
+          </span>
         </span>️
       </el-tag>
       <el-button type="danger" size="small" @click="dialogVisible = true" plain>Stop the current game</el-button>
