@@ -1,0 +1,7 @@
+logging:
+  level: INFO
+  loggers:
+    com.boredgames.server: DEBUG
+
+template: Hello %s!
+defaultName: Timmy

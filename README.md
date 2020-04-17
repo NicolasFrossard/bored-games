@@ -1,14 +1,13 @@
-# Bored games
+# BoredGames
 
-Bored game is an experiment at a simple multiplayer web game.
+How to start the BoredGames application
+---
 
-To build and run the server:
+1. Run `mvn clean install` to build your application
+1. Start application with `java -jar target/com.boredgames.server-1.0-SNAPSHOT.jar server config.yml`
+1. To check that your application is running enter url `http://localhost:8080`
 
-- `yarn install`
-- `yarn build`
-- `yarn server`
+Health Check
+---
 
-To run dev mode:
-
-- Run the back-end with `tsc` and `yarn server`
-- Run the front-end in dev mode with `yarn run dev`
+To see your applications health enter url `http://localhost:8081/healthcheck`
