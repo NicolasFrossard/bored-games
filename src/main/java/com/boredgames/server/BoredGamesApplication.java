@@ -35,7 +35,7 @@ public class BoredGamesApplication extends Application<BoredGamesConfiguration> 
     @Override
     public void initialize(final Bootstrap<BoredGamesConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle("/assets", "/", "index.html", "static"));
-        bootstrap.addBundle(new WebsocketBundle(AnnotatedEchoServer.class));
+        bootstrap.addBundle(new WebsocketBundle(BoredGamesWsServer.class));
     }
 
     @Override
@@ -47,27 +47,6 @@ public class BoredGamesApplication extends Application<BoredGamesConfiguration> 
 
         environment.jersey().setUrlPattern("/api/*");
         environment.jersey().register(helloResource);
-    }
-
-
-    @Metered
-    @Timed
-    @ExceptionMetered
-    @ServerEndpoint("/annotated-ws")
-    public static class AnnotatedEchoServer {
-        @OnOpen
-        public void myOnOpen(final Session session) throws IOException {
-            session.getAsyncRemote().sendText("welcome");
-        }
-
-        @OnMessage
-        public void myOnMsg(final Session session, String message) {
-            session.getAsyncRemote().sendText(message.toUpperCase());
-        }
-
-        @OnClose
-        public void myOnClose(final Session session, CloseReason cr) {
-        }
     }
 }
 
