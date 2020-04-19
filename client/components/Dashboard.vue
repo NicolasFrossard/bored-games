@@ -151,22 +151,22 @@ export default {
       // });
     },
     connect: function () {
-      this.$socket.emit('connectWithPlayerName', this.playerName)
+      this.$socket.send('connectWithPlayerName', this.playerName)
     },
     startTheGame: function () {
-      this.$socket.emit('startTheGame')
+      this.$socket.send('startTheGame')
     },
     stopTheGame: function () {
-      this.$socket.emit('stopTheGame')
+      this.$socket.send('stopTheGame')
     },
     playCard: function (card) {
-      this.$socket.emit('playCard', card, this.gameState.round)
+      this.$socket.send('playCard', card, this.gameState.round)
     },
     deletePlayer: function (playerName) {
-      this.$socket.emit('deletePlayer', playerName)
+      this.$socket.send('deletePlayer', playerName)
     },
     getGameState: function () {
-      this.$socket.emit('getGameState')
+      this.$socket.send('getGameState')
     },
     triggerCountdown() {
       this.countdown = 3;
