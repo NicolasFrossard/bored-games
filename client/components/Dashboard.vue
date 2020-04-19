@@ -9,11 +9,11 @@
           <span>You made it to the following rank:</span>
         </el-row>
         <el-row class="dashboard">
-          <img src="../assets/gameOver/pathetic.jpg" width="50%" v-if="gameOverRoundAchieved <= 3">
-          <img src="../assets/gameOver/not-bad.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 4">
-          <img src="../assets/gameOver/good-job.jpg" width="33%" v-else-if="gameOverRoundAchieved <= 5">
-          <img src="../assets/gameOver/amazing.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 6">
-          <img src="../assets/gameOver/awesome.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 7">
+          <img src="client/assets/gameOver/pathetic.jpg" width="50%" v-if="gameOverRoundAchieved <= 3">
+          <img src="client/assets/gameOver/not-bad.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 4">
+          <img src="client/assets/gameOver/good-job.jpg" width="33%" v-else-if="gameOverRoundAchieved <= 5">
+          <img src="client/assets/gameOver/amazing.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 6">
+          <img src="client/assets/gameOver/awesome.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 7">
         </el-row>
         <span slot="footer" class="dialog-footer">
           <el-button @click="gameOverDialogVisible = false">I acknowledge my failure as a player</el-button>
@@ -101,48 +101,54 @@ export default {
   methods: {
     initSocket: function () {
       console.log('Initializing socket')
-      this.sockets.subscribe('gameLog', (gameLogInfo) => {
-        this.logEntries.unshift(gameLogInfo);
-        if(gameLogInfo.type === 'ERROR') {
-          this.$message.error(gameLogInfo.text);
-        } else if(gameLogInfo.type === 'WARN') {
-          this.$message.warning(gameLogInfo.text);
-        }
-        this.highlightLatestLogEntry();
-      });
-      this.sockets.subscribe('serverWarning', (message) => {
-        this.$message.warning(message);
-      });
-      this.sockets.subscribe('gameState', (gameState) => {
-        this.gameState = gameState;
-      });
-      this.sockets.subscribe('connectionSuccessful', (socketId) => {
-        this.connectionEstablished = true;
-        this.mySocketId = socketId;
-      });
-      this.sockets.subscribe('gameLost', (round) => {
-        this.playSoundLostGame();
-        this.gameOverRoundAchieved = round;
-        this.gameOverDialogVisible = true;
-      });
-      this.sockets.subscribe('errorMade', (cards) => {
-        this.playSoundErrorMade();
-        this.flipCards(cards);
-      });
-      this.sockets.subscribe('cardWellPlayed', (card) => {
-        this.playSoundCardPlayed();
-        this.highlightLastCardPlayed();
-        this.flipCards([card]);
-      });
-      this.sockets.subscribe('newRound', (round) => {
-        this.$message.info(`Starting round ${round}`);
-        this.playSoundNewRound();
-        this.triggerCountdown();
-      });
-      this.sockets.subscribe('newGameStarted', () => {
-        this.playStartingGame();
-        this.triggerCountdown();
-      });
+
+      let socket = this.$socket;
+      setTimeout(function () {
+        socket.send('some data');
+      }, 1000);
+
+      // this.sockets.subscribe('gameLog', (gameLogInfo) => {
+      //   this.logEntries.unshift(gameLogInfo);
+      //   if(gameLogInfo.type === 'ERROR') {
+      //     this.$message.error(gameLogInfo.text);
+      //   } else if(gameLogInfo.type === 'WARN') {
+      //     this.$message.warning(gameLogInfo.text);
+      //   }
+      //   this.highlightLatestLogEntry();
+      // });
+      // this.sockets.subscribe('serverWarning', (message) => {
+      //   this.$message.warning(message);
+      // });
+      // this.sockets.subscribe('gameState', (gameState) => {
+      //   this.gameState = gameState;
+      // });
+      // this.sockets.subscribe('connectionSuccessful', (socketId) => {
+      //   this.connectionEstablished = true;
+      //   this.mySocketId = socketId;
+      // });
+      // this.sockets.subscribe('gameLost', (round) => {
+      //   this.playSoundLostGame();
+      //   this.gameOverRoundAchieved = round;
+      //   this.gameOverDialogVisible = true;
+      // });
+      // this.sockets.subscribe('errorMade', (cards) => {
+      //   this.playSoundErrorMade();
+      //   this.flipCards(cards);
+      // });
+      // this.sockets.subscribe('cardWellPlayed', (card) => {
+      //   this.playSoundCardPlayed();
+      //   this.highlightLastCardPlayed();
+      //   this.flipCards([card]);
+      // });
+      // this.sockets.subscribe('newRound', (round) => {
+      //   this.$message.info(`Starting round ${round}`);
+      //   this.playSoundNewRound();
+      //   this.triggerCountdown();
+      // });
+      // this.sockets.subscribe('newGameStarted', () => {
+      //   this.playStartingGame();
+      //   this.triggerCountdown();
+      // });
     },
     connect: function () {
       this.$socket.emit('connectWithPlayerName', this.playerName)

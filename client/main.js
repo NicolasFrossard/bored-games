@@ -7,17 +7,15 @@ import VueSocketIO from 'vue-socket.io'
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/reset.css'
+import VueNativeSock from 'vue-native-websocket'
 
 Vue.config.productionTip = false
 
-Vue.use(new VueSocketIO({
-  debug: true,
-  connection: 'http://localhost:3000/',
-  vuex: {
-    actionPrefix: 'SOCKET_',
-    mutationPrefix: 'SOCKET_'
-  },
-}))
+Vue.use(VueNativeSock, 'ws://localhost:8080/annotated-ws', {
+  reconnection: true, // (Boolean) whether to reconnect automatically (false)
+  reconnectionAttempts: 5, // (Number) number of reconnection attempts before giving up (Infinity),
+  reconnectionDelay: 3000, // (Number) how long to initially wait before attempting a new (1000)
+})
 
 Vue.use(Element)
 
