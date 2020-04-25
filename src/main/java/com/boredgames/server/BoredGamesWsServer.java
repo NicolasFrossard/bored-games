@@ -9,11 +9,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.LoggerFactory;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.io.Console;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 @Metered
 @Timed
@@ -39,7 +39,7 @@ public class BoredGamesWsServer {
         try {
             TestEvent testEvent = MAPPER.readValue(message, TestEvent.class);
         } catch (JsonProcessingException e) {
-            LOGGER.error("failed to deserialize message: {}", message);
+            LOGGER.error("failed to deserialize message: {}", message, e);
         }
     }
 
