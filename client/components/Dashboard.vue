@@ -104,7 +104,7 @@ export default {
 
       let socket = this.$socket;
       setTimeout(function () {
-        socket.send({type: "test_event", message: "hello this is timmy"});
+        socket.send(JSON.stringify({type: "test_event", message: "hello this is timmy"}));
       }, 1000);
 
       // this.sockets.subscribe('gameLog', (gameLogInfo) => {

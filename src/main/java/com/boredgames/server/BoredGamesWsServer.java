@@ -3,6 +3,7 @@ package com.boredgames.server;
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Metered;
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,6 +39,7 @@ public class BoredGamesWsServer {
 
         try {
             TestEvent testEvent = MAPPER.readValue(message, TestEvent.class);
+            LOGGER.info("success! we got: {}", MAPPER.writeValueAsString(testEvent));
         } catch (JsonProcessingException e) {
             LOGGER.error("failed to deserialize message: {}", message, e);
         }
@@ -55,7 +57,8 @@ public class BoredGamesWsServer {
         @JsonProperty
         private final String message;
 
-        public TestEvent(String type, String message) {
+        @JsonCreator
+        public TestEvent(@JsonProperty("type") String type, @JsonProperty("message") String message) {
             this.type = type;
             this.message = message;
         }
