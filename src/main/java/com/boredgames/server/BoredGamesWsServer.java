@@ -1,6 +1,8 @@
 package com.boredgames.server;
 
+import com.boredgames.server.events.BoredEventDto;
 import com.boredgames.server.events.GetGameStateEvent;
+import com.boredgames.server.events.TestEvent;
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Metered;
 import com.codahale.metrics.annotation.Timed;
@@ -40,7 +42,7 @@ public class BoredGamesWsServer {
     public void myOnMsg(final Session session, String message) {
         LOGGER.info("message! {}", message);
         try {
-            EventDto testEvent = MAPPER.readValue(message, EventDto.class);
+            BoredEventDto testEvent = MAPPER.readValue(message, BoredEventDto.class);
             String received = MAPPER.writeValueAsString(testEvent);
             LOGGER.info("success! we got: {}", received);
             session.getBasicRemote().sendText(received);
@@ -56,6 +58,29 @@ public class BoredGamesWsServer {
             LOGGER.info("failed to deserialize message for class GetGameStateEvent: {}", message);
         }
 
+        try {
+            BoredEventDto eventDto = MAPPER.readValue(message, BoredEventDto.class);
+            switch (eventDto.getType()) {
+                case EVENT_TEST:
+                    TestEvent event = eventDto.getEvent().get();
+                    String received = MAPPER.writeValueAsString(event);
+                    LOGGER.info("success! we got: {}", received);
+                    session.getBasicRemote().sendText(received);
+
+                case EVENT_GET_GAME_STATE:
+                    // if we want to get the event core (if we need one, depending on the event)
+                    // GetGameStateEvent event = eventDto.getEvent().orElseThrow(MissingMandatoryEventException::new);
+
+                    // TODO : call TheMindGame::getGameState
+                    break;
+
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            LOGGER.error("failed to deserialize message: {}", message, e);
+        }
+
         LOGGER.error("All deserialization failed");
     }
 
@@ -64,28 +89,4 @@ public class BoredGamesWsServer {
         LOGGER.info("close session {}", cr);
     }
 
-    private static class EventDto {
-
-        @JsonProperty
-        private final String type;
-
-        @JsonProperty
-        private final MessageEvent event;
-
-        @JsonCreator
-        public EventDto(@JsonProperty("type") String type, @JsonProperty("event") MessageEvent event) {
-            this.type = type;
-            this.event = event;
-        }
-    }
-
-    private static class MessageEvent {
-        @JsonProperty
-        private final String message;
-
-        @JsonCreator
-        public MessageEvent(@JsonProperty("message") String message) {
-            this.message = message;
-        }
-    }
 }

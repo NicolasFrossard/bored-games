@@ -34,4 +34,8 @@ public class Game {
     public void stop() {
         this.gameState = GameState.TO_BE_STARTED;
     }
+
+    public GameState getGameState() {
+        return gameState;
+    }
 }
