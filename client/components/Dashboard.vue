@@ -106,13 +106,13 @@ export default {
     initSocket: function () {
       console.log('Initializing socket')
 
-      this.wsSend("test_event", {message: "hello this is timmy 4"});
+      this.wsSend("EVENT_TEST", {message: "hello this is timmy 5"});
 
       this.$socket.onmessage = function (event) {
         const parsed = JSON.parse(event.data);
         const dashboard = this;
         switch (parsed.type) {
-          case 'test_event':
+          case 'EVENT_TEST':
             console.log(`We got this test event: ${JSON.stringify(parsed.event)}`);
             break;
 

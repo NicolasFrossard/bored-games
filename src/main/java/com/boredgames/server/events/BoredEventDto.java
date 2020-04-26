@@ -1,21 +1,17 @@
 package com.boredgames.server.events;
 
-import com.boredgames.server.BoredGamesWsServer;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Optional;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class BoredEventDto {
-
-    @JsonProperty
     private final BoredEventType type;
 
-    @JsonProperty
-    private final Optional<IBoredEvent> event;
+    private final JsonNode event;
 
     @JsonCreator
-    public BoredEventDto(@JsonProperty("type") BoredEventType type, @JsonProperty("event") Optional<IBoredEvent> event) {
+    public BoredEventDto(@JsonProperty("type") BoredEventType type, @JsonProperty("event") JsonNode event) {
         this.type = type;
         this.event = event;
     }
@@ -24,7 +20,7 @@ public class BoredEventDto {
         return type;
     }
 
-    public Optional<IBoredEvent> getEvent() {
+    public JsonNode getEvent() {
         return event;
     }
 }
