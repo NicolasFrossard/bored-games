@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img src="client/assets/bored-games.png">
+    <img src="static/bored-games.png">
     <router-view/>
   </div>
 </template>

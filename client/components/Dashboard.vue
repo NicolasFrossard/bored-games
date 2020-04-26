@@ -9,11 +9,11 @@
           <span>You made it to the following rank:</span>
         </el-row>
         <el-row class="dashboard">
-          <img src="client/assets/gameOver/pathetic.jpg" width="50%" v-if="gameOverRoundAchieved <= 3">
-          <img src="client/assets/gameOver/not-bad.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 4">
-          <img src="client/assets/gameOver/good-job.jpg" width="33%" v-else-if="gameOverRoundAchieved <= 5">
-          <img src="client/assets/gameOver/amazing.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 6">
-          <img src="client/assets/gameOver/awesome.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 7">
+          <img src="static/gameOver/pathetic.jpg" width="50%" v-if="gameOverRoundAchieved <= 3">
+          <img src="static/gameOver/not-bad.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 4">
+          <img src="static/gameOver/good-job.jpg" width="33%" v-else-if="gameOverRoundAchieved <= 5">
+          <img src="static/gameOver/amazing.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 6">
+          <img src="static/gameOver/awesome.jpg" width="50%" v-else-if="gameOverRoundAchieved <= 7">
         </el-row>
         <span slot="footer" class="dialog-footer">
           <el-button @click="gameOverDialogVisible = false">I acknowledge my failure as a player</el-button>
@@ -84,7 +84,11 @@ export default {
   },
   name: 'Dashboard',
   mounted() {
-    this.initSocket();
+    // TODO wait until socket is connected instead of hardcoded 1 second
+    const initSocketCall = this.initSocket;
+    setTimeout(function () {
+      initSocketCall();
+    }, 1000);
   },
   data () {
     return {
@@ -102,71 +106,100 @@ export default {
     initSocket: function () {
       console.log('Initializing socket')
 
-      let socket = this.$socket;
-      setTimeout(function () {
-        socket.send(JSON.stringify({type: "test_event", message: "hello this is timmy"}));
-      }, 1000);
+      this.wsSend("test_event", {message: "hello this is timmy 4"});
 
-      // this.sockets.subscribe('gameLog', (gameLogInfo) => {
-      //   this.logEntries.unshift(gameLogInfo);
-      //   if(gameLogInfo.type === 'ERROR') {
-      //     this.$message.error(gameLogInfo.text);
-      //   } else if(gameLogInfo.type === 'WARN') {
-      //     this.$message.warning(gameLogInfo.text);
-      //   }
-      //   this.highlightLatestLogEntry();
-      // });
-      // this.sockets.subscribe('serverWarning', (message) => {
-      //   this.$message.warning(message);
-      // });
-      // this.sockets.subscribe('gameState', (gameState) => {
-      //   this.gameState = gameState;
-      // });
-      // this.sockets.subscribe('connectionSuccessful', (socketId) => {
-      //   this.connectionEstablished = true;
-      //   this.mySocketId = socketId;
-      // });
-      // this.sockets.subscribe('gameLost', (round) => {
-      //   this.playSoundLostGame();
-      //   this.gameOverRoundAchieved = round;
-      //   this.gameOverDialogVisible = true;
-      // });
-      // this.sockets.subscribe('errorMade', (cards) => {
-      //   this.playSoundErrorMade();
-      //   this.flipCards(cards);
-      // });
-      // this.sockets.subscribe('cardWellPlayed', (card) => {
-      //   this.playSoundCardPlayed();
-      //   this.highlightLastCardPlayed();
-      //   this.flipCards([card]);
-      // });
-      // this.sockets.subscribe('newRound', (round) => {
-      //   this.$message.info(`Starting round ${round}`);
-      //   this.playSoundNewRound();
-      //   this.triggerCountdown();
-      // });
-      // this.sockets.subscribe('newGameStarted', () => {
-      //   this.playStartingGame();
-      //   this.triggerCountdown();
-      // });
+      this.$socket.onmessage = function (event) {
+        const parsed = JSON.parse(event.data);
+        const dashboard = this;
+        switch (parsed.type) {
+          case 'test_event':
+            console.log(`We got this test event: ${JSON.stringify(parsed.event)}`);
+            break;
+
+          case 'gameLog':
+            const gameLogInfo = parsed.event;
+            dashboard.logEntries.unshift(gameLogInfo);
+            if(gameLogInfo.type === 'ERROR') {
+              dashboard.$message.error(gameLogInfo.text);
+            } else if(gameLogInfo.type === 'WARN') {
+              dashboard.$message.warning(gameLogInfo.text);
+            }
+            dashboard.highlightLatestLogEntry();
+            break;
+
+          case 'serverWarning':
+            const message = parsed.event;
+            dashboard.$message.warning(message);
+            break;
+
+          case 'gameState':
+            const gameState = parsed.event;
+            dashboard.gameState = gameState;
+            break;
+
+          case 'connectionSuccessful':
+            const socketId = parsed.event
+            dashboard.connectionEstablished = true;
+            dashboard.mySocketId = socketId;
+            break;
+
+          case 'gameLost':
+            const round = parsed.event
+            dashboard.playSoundLostGame();
+            dashboard.gameOverRoundAchieved = round;
+            dashboard.gameOverDialogVisible = true;
+            break;
+
+          case 'errorMade':
+            const cards = parsed.event
+            dashboard.playSoundErrorMade();
+            dashboard.flipCards(cards);
+            break;
+
+          case 'cardWellPlayed':
+            const card = parsed.event
+            dashboard.playSoundCardPlayed();
+            dashboard.highlightLastCardPlayed();
+            dashboard.flipCards([card]);
+            break;
+
+          case 'newRound':
+            const newRound = parsed.event
+            dashboard.$message.info(`Starting round ${newRound}`);
+            dashboard.playSoundNewRound();
+            dashboard.triggerCountdown();
+            break;
+
+          case 'newGameStarted':
+            dashboard.playStartingGame();
+            dashboard.triggerCountdown();
+            break;
+
+          default:
+            console.error(`Got unknown event type: ${JSON.stringify(parsed)}`);
+        }
+      }
+    },
+    wsSend: function(eventType, event) {
+      this.$socket.send(JSON.stringify({type: eventType, event: event}));
     },
     connect: function () {
-      this.$socket.send('connectWithPlayerName', this.playerName)
+      this.wsSend('connectWithPlayerName', this.playerName)
     },
     startTheGame: function () {
-      this.$socket.send('startTheGame')
+      this.wsSend('startTheGame', {})
     },
     stopTheGame: function () {
-      this.$socket.send('stopTheGame')
+      this.wsSend('stopTheGame', {})
     },
     playCard: function (card) {
-      this.$socket.send('playCard', card, this.gameState.round)
+      this.wsSend('playCard', {card: card, round: this.gameState.round})
     },
     deletePlayer: function (playerName) {
-      this.$socket.send('deletePlayer', playerName)
+      this.wsSend('deletePlayer', playerName)
     },
     getGameState: function () {
-      this.$socket.send('getGameState')
+      this.wsSend('getGameState', {})
     },
     triggerCountdown() {
       this.countdown = 3;

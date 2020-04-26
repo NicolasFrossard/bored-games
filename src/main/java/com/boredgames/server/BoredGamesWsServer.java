@@ -5,16 +5,18 @@ import com.codahale.metrics.annotation.Metered;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.LoggerFactory;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+
+import javax.websocket.CloseReason;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
 
 @Metered
 @Timed
@@ -35,12 +37,12 @@ public class BoredGamesWsServer {
     @OnMessage
     public void myOnMsg(final Session session, String message) {
         LOGGER.info("message! {}", message);
-        session.getAsyncRemote().sendText(message.toUpperCase());
-
         try {
-            TestEvent testEvent = MAPPER.readValue(message, TestEvent.class);
-            LOGGER.info("success! we got: {}", MAPPER.writeValueAsString(testEvent));
-        } catch (JsonProcessingException e) {
+            EventDto testEvent = MAPPER.readValue(message, EventDto.class);
+            String received = MAPPER.writeValueAsString(testEvent);
+            LOGGER.info("success! we got: {}", received);
+            session.getBasicRemote().sendText(received);
+        } catch (Exception e) {
             LOGGER.error("failed to deserialize message: {}", message, e);
         }
     }
@@ -50,16 +52,26 @@ public class BoredGamesWsServer {
         LOGGER.info("close session {}", cr);
     }
 
-    private static class TestEvent {
+    private static class EventDto {
         @JsonProperty
         private final String type;
 
         @JsonProperty
+        private final MessageEvent event;
+
+        @JsonCreator
+        public EventDto(@JsonProperty("type") String type, @JsonProperty("event") MessageEvent event) {
+            this.type = type;
+            this.event = event;
+        }
+    }
+
+    private static class MessageEvent {
+        @JsonProperty
         private final String message;
 
         @JsonCreator
-        public TestEvent(@JsonProperty("type") String type, @JsonProperty("message") String message) {
-            this.type = type;
+        public MessageEvent(@JsonProperty("message") String message) {
             this.message = message;
         }
     }
