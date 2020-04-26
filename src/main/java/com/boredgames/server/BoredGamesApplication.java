@@ -34,8 +34,7 @@ public class BoredGamesApplication extends Application<BoredGamesConfiguration> 
 
     @Override
     public void initialize(final Bootstrap<BoredGamesConfiguration> bootstrap) {
-        //bootstrap.addBundle(new AssetsBundle("/assets", "/", "index.html", "static"));
-        bootstrap.addBundle(new AssetsBundle("/dist", "/", "index.html", "static"));
+        bootstrap.addBundle(new AssetsBundle("/client", "/", "index.html"));
         bootstrap.addBundle(new WebsocketBundle(BoredGamesWsServer.class));
     }
 
