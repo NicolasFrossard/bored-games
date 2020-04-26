@@ -1,10 +1,12 @@
 package com.boredgames.server;
 
+import com.boredgames.server.events.GetGameStateEvent;
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Metered;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.LoggerFactory;
@@ -45,6 +47,16 @@ public class BoredGamesWsServer {
         } catch (Exception e) {
             LOGGER.error("failed to deserialize message: {}", message, e);
         }
+
+        try {
+            GetGameStateEvent getGameStateEvent = MAPPER.readValue(message, GetGameStateEvent.class);
+            LOGGER.info("success! we got: {}", MAPPER.writeValueAsString(getGameStateEvent));
+            return;
+        } catch (JsonProcessingException e) {
+            LOGGER.info("failed to deserialize message for class GetGameStateEvent: {}", message);
+        }
+
+        LOGGER.error("All deserialization failed");
     }
 
     @OnClose
@@ -53,6 +65,7 @@ public class BoredGamesWsServer {
     }
 
     private static class EventDto {
+
         @JsonProperty
         private final String type;
 
