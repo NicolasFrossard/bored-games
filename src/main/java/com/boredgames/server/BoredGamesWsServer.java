@@ -1,12 +1,12 @@
 package com.boredgames.server;
 
 import com.boredgames.server.events.BoredEventDto;
-import com.boredgames.server.events.GetGameStateEvent;
+import com.boredgames.server.events.BoredEventType;
+import com.boredgames.server.events.GameStatusEvent;
 import com.boredgames.server.events.TestEvent;
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Metered;
 import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.LoggerFactory;
@@ -30,6 +30,8 @@ public class BoredGamesWsServer {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(BoredGamesWsServer.class);
 
+    private static final TheMindGame theMindGame = new TheMindGame();
+
     @OnOpen
     public void myOnOpen(final Session session) throws IOException {
         LOGGER.info("connexion: {}", session.getUserProperties().get("javax.websocket.endpoint.remoteAddress"));
@@ -48,12 +50,13 @@ public class BoredGamesWsServer {
                     LOGGER.info("success! we got: {}", received);
                     session.getBasicRemote().sendText(MAPPER.writeValueAsString(eventDto));
                     break;
+                // if we want to get the event core (if we need one, depending on the event)
+                // GetGameStateEvent event = eventDto.getEvent().orElseThrow(MissingMandatoryEventException::new);
 
-                case EVENT_GET_GAME_STATE:
-                    // if we want to get the event core (if we need one, depending on the event)
-                    // GetGameStateEvent event = eventDto.getEvent().orElseThrow(MissingMandatoryEventException::new);
-
-                    // TODO : call TheMindGame::getGameState
+                case EVENT_GET_GAME_STATUS:
+                    GameStatusEvent gameStatusEvent = new GameStatusEvent(theMindGame.getGameStatus());
+                    BoredEventDto sentEventDto = new BoredEventDto(BoredEventType.EVENT_GAME_STATUS, MAPPER.valueToTree(gameStatusEvent));
+                    session.getBasicRemote().sendText(MAPPER.writeValueAsString(sentEventDto));
                     break;
 
                 default:

@@ -1,22 +1,18 @@
 package com.boredgames.server;
 
+import com.boredgames.server.types.GameStatus;
+
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class Game {
 
-    protected enum GameState {
-        TO_BE_STARTED,
-        STARTED;
-    }
-
-    protected GameState gameState;
+    protected GameStatus gameStatus;
     protected ArrayList<Player> players;
 
     public Game() {
         this.players = new ArrayList<Player>();
-        this.gameState = GameState.TO_BE_STARTED;
+        this.gameStatus = GameStatus.TO_BE_STARTED;
     }
 
     public void addPlayer(Player p) {
@@ -24,18 +20,18 @@ public class Game {
     }
 
     public boolean isStarted() {
-        return this.gameState == GameState.STARTED;
+        return this.gameStatus == GameStatus.STARTED;
     }
 
     public void start() {
-        this.gameState = GameState.STARTED;;
+        this.gameStatus = GameStatus.STARTED;;
     }
 
     public void stop() {
-        this.gameState = GameState.TO_BE_STARTED;
+        this.gameStatus = GameStatus.TO_BE_STARTED;
     }
 
-    public GameState getGameState() {
-        return gameState;
+    public GameStatus getGameStatus() {
+        return gameStatus;
     }
 }
