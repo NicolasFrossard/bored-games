@@ -59,6 +59,9 @@ public class BoredGamesWsServer {
                     session.getBasicRemote().sendText(MAPPER.writeValueAsString(sentEventDto));
                     break;
 
+                case EVENT_GET_GAME_STATE:
+                    session.getBasicRemote().sendText(MAPPER.writeValueAsString(new BoredEventDto(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame))));
+
                 default:
                     break;
             }

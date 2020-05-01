@@ -1,13 +1,18 @@
 package com.boredgames.server;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import java.util.stream.IntStream;
 
 public class TheMindGame extends Game {
+    @JsonProperty
     private int round;
+    @JsonProperty
     private int lives;
+    @JsonProperty
     private ArrayList<Integer> playedCards;
 
     public TheMindGame() {

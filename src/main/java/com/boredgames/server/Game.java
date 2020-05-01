@@ -1,13 +1,15 @@
 package com.boredgames.server;
 
 import com.boredgames.server.types.GameStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 
 
 public class Game {
-
+    @JsonProperty
     protected GameStatus gameStatus;
+    @JsonProperty
     protected ArrayList<Player> players;
 
     public Game() {
