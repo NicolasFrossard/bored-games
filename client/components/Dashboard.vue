@@ -107,10 +107,10 @@ export default {
       console.log('Initializing socket')
 
       this.wsSend("EVENT_TEST", {message: "hello this is timmy 5"});
+      const dashboard = this;
 
       this.$socket.onmessage = function (event) {
         const parsed = JSON.parse(event.data);
-        const dashboard = this;
         switch (parsed.type) {
           case 'EVENT_TEST':
             console.log(`We got this test event: ${JSON.stringify(parsed.event)}`);
@@ -132,7 +132,7 @@ export default {
             dashboard.$message.warning(message);
             break;
 
-          case 'gameState':
+          case 'EVENT_GAME_STATE':
             const gameState = parsed.event;
             dashboard.gameState = gameState;
             break;
@@ -199,7 +199,7 @@ export default {
       this.wsSend('deletePlayer', playerName)
     },
     getGameState: function () {
-      this.wsSend('getGameState', {})
+      this.wsSend('EVENT_GET_GAME_STATE', {})
     },
     triggerCountdown() {
       this.countdown = 3;
