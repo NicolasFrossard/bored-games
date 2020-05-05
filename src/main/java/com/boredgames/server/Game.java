@@ -59,7 +59,7 @@ public class Game {
     }
 
     public Map<String, Player> getPlayers() {
-        return this.players;
+        return players;
     }
 
     public void broadcastEvent(String message) throws IOException {

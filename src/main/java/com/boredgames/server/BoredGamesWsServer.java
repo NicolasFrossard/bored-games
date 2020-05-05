@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -34,11 +35,13 @@ public class BoredGamesWsServer {
 
     private static final TheMindGame theMindGame = new TheMindGame();
 
+    private Map<String, Session> sessions = new HashMap<>();
 
     @OnOpen
     public void myOnOpen(final Session session) throws IOException {
         LOGGER.info("connexion: {} - {}", session.getUserProperties().get("javax.websocket.endpoint.remoteAddress"), session.getId());
         session.getAsyncRemote().sendText("welcome");
+        sessions.put(session.getId(), session);
     }
 
     @OnMessage
@@ -71,7 +74,7 @@ public class BoredGamesWsServer {
                     Player player = theMindGame.getPlayerByName(event.getPlayerName());
                     if (player != null) {
                         LOGGER.debug("Player {} reconnected", player.getName());
-                        player.setConnected();
+                        player.setConnected(session.getId());
                     }
                     else {
                         theMindGame.addPlayer(new Player(event.getPlayerName(), false, true, session.getId()));
@@ -79,7 +82,10 @@ public class BoredGamesWsServer {
                         LOGGER.debug("New player {} connected", player.getName());
                     }
                     //broadcast(EVENT_PLAYER_CONNECTED, );
-                    broadcast(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
+                    //broadcast(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
+
+                    broadcastEvent(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
+
                     break;
 
                 default:
@@ -95,22 +101,30 @@ public class BoredGamesWsServer {
     public void myOnClose(final Session session, CloseReason cr) {
         LOGGER.info("close session {} - {}", session.getId(), cr);
         Player player = theMindGame.getPlayerBySessionId(session.getId());
-        if (player != null)
+        if (player != null) {
             player.setDisconnected();
+            LOGGER.debug("Player {} disconnected", player.getName());
+        }
+        else {
+            LOGGER.debug("Session with no player");
+        }
+        sessions.remove(session.getId());
     }
 
-    private void broadcast(BoredEventType type, JsonNode event) throws IOException {
+
+    public void broadcastEvent(BoredEventType type, JsonNode event) throws IOException {
         BoredEventDto eventDto = new BoredEventDto(type, event);
-        //theMindGame.broadcastEvent(MAPPER.writeValueAsString(eventDto));
-
-    }
-
-    public void broadcastEvent(String message) throws IOException {
         Iterator playersIterator = theMindGame.getPlayers().entrySet().iterator();
         while (playersIterator.hasNext()) {
             Map.Entry mapElt = (Map.Entry)playersIterator.next();
-            Session session = (Session)mapElt.getKey();
-            session.getBasicRemote().sendText(message);
+            Player player = (Player)mapElt.getValue();
+            if (player != null)
+                LOGGER.info("player {}", player.getName());
+            else
+                LOGGER.info("player null");
+            if (player.isConnected()) {
+                sessions.get(player.getSessionId()).getBasicRemote().sendText(MAPPER.writeValueAsString(eventDto));
+            }
         }
     }
 }
