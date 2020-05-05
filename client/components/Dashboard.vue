@@ -184,7 +184,7 @@ export default {
       this.$socket.send(JSON.stringify({type: eventType, event: event}));
     },
     connect: function () {
-      this.wsSend('connectWithPlayerName', this.playerName)
+      this.wsSend('EVENT_CONNECT_WITH_PLAYER_NAME', {playerName: this.playerName})
     },
     startTheGame: function () {
       this.wsSend('startTheGame', {})

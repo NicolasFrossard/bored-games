@@ -2,9 +2,8 @@ package com.boredgames.server;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
+import javax.websocket.Session;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class TheMindGame extends Game {
@@ -41,7 +40,7 @@ public class TheMindGame extends Game {
         this.playedCards.clear();
 
         for (int i = 0; i <= this.round && cards.size() >= this.players.size(); i++) {
-            this.players.stream().forEach(player -> player.giveCard(cards.remove(0)));;
+            this.players.forEach((k,v) -> v.giveCard(cards.remove(0)));
         }
     }
 
