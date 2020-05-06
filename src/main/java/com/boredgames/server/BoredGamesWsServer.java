@@ -100,12 +100,25 @@ public class BoredGamesWsServer {
                     }
                     break;
 
+                case EVENT_START_THE_GAME:
+                    if (!theMindGame.getPlayerBySessionId(session.getId()).isAdmin()) {
+                        session.getBasicRemote().sendText(MAPPER.writeValueAsString(new BoredEventDto(BoredEventType.EVENT_WARNING,
+                                MAPPER.valueToTree("Only the admin can do that. Please don't be such a goose"))));
+                        break;
+                    }
+                    LOGGER.info("Starting the game");
+                    theMindGame.start();
+                    theMindGame.moveToNextRound();
+                    broadcastEvent(BoredEventType.EVENT_GAME_STARTED, null);
+                    broadcastEvent(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
+                    break;
+
                 default:
                     LOGGER.error("Unmanaged event: {}", eventDto.getType());
                     break;
             }
         } catch (Exception e) {
-            LOGGER.error("failed to deserialize message: {}", message, e);
+            LOGGER.error("failed to deserialize/process message: {}", message, e);
         }
     }
 
