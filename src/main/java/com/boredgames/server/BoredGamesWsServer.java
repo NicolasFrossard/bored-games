@@ -35,7 +35,7 @@ public class BoredGamesWsServer {
 
     private static final TheMindGame theMindGame = new TheMindGame();
 
-    private Map<String, Session> sessions = new HashMap<>();
+    private static final Map<String, Session> sessions = new HashMap<>();
 
     @OnOpen
     public void myOnOpen(final Session session) throws IOException {
