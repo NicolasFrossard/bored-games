@@ -7,17 +7,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.websocket.Session;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 
 public class Game {
     @JsonProperty
     protected GameStatus gameStatus;
     @JsonProperty
-    protected Map<String, Player> players = new HashMap<>();
+    protected Map<String, Player> players = Collections.synchronizedMap(new HashMap<>());
 
     public Game() {
         this.gameStatus = GameStatus.TO_BE_STARTED;
