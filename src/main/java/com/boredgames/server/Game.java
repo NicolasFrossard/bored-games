@@ -24,6 +24,8 @@ public class Game {
     }
 
     public void addPlayer(Player p) {
+        if (this.players.isEmpty())
+
         this.players.put(p.getSessionId(), p);
     }
 

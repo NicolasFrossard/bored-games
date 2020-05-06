@@ -49,4 +49,8 @@ public class Player {
     public boolean isConnected() {
         return this.isConnected;
     }
+
+    public boolean isAdmin() {
+        return this.isAdmin;
+    }
 }
