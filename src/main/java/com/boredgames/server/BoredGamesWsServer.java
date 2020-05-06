@@ -113,6 +113,18 @@ public class BoredGamesWsServer {
                     broadcastEvent(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
                     break;
 
+                case EVENT_STOP_THE_GAME:
+                    if (!theMindGame.getPlayerBySessionId(session.getId()).isAdmin()) {
+                        session.getBasicRemote().sendText(MAPPER.writeValueAsString(new BoredEventDto(BoredEventType.EVENT_WARNING,
+                                MAPPER.valueToTree("Only the admin can do that. Please don't be such a goose"))));
+                        break;
+                    }
+                    LOGGER.info("Stopping the game");
+                    theMindGame.stop();
+                    broadcastEvent(BoredEventType.EVENT_GAME_STOPPED, null);
+                    broadcastEvent(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
+                    break;
+
                 default:
                     LOGGER.error("Unmanaged event: {}", eventDto.getType());
                     break;
