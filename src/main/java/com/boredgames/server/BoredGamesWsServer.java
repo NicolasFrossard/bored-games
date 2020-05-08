@@ -57,8 +57,8 @@ public class BoredGamesWsServer {
                     break;
 
                 case EVENT_CONNECT_WITH_PLAYER_NAME:
-                    ConnectWithPlayerNameEvent event = MAPPER.treeToValue(eventDto.getEvent(), ConnectWithPlayerNameEvent.class);
-                    optPlayer = theMindGame.getPlayerByName(event.getPlayerName());
+                    ConnectWithPlayerNameEvent playerNameEvent = MAPPER.treeToValue(eventDto.getEvent(), ConnectWithPlayerNameEvent.class);
+                    optPlayer = theMindGame.getPlayerByName(playerNameEvent.getPlayerName());
                     if (optPlayer.isPresent()) {
                         player = optPlayer.get();
                         if (!player.isConnected()) {
@@ -71,9 +71,9 @@ public class BoredGamesWsServer {
                     }
                     else if (theMindGame.getStatus() == GameStatus.TO_BE_STARTED) {
                         if (theMindGame.getPlayers().isEmpty()) // first player is admin
-                            theMindGame.addPlayer(new Player(event.getPlayerName(), true, true, session.getId()));
+                            theMindGame.addPlayer(new Player(playerNameEvent.getPlayerName(), true, true, session.getId()));
                         else
-                            theMindGame.addPlayer(new Player(event.getPlayerName(), false, true, session.getId()));
+                            theMindGame.addPlayer(new Player(playerNameEvent.getPlayerName(), false, true, session.getId()));
                         player = theMindGame.getPlayerBySessionId(session.getId()).orElseThrow(Exception::new);
                         LOGGER.debug("New player {} connected", player.getName());
                         sendEventToPlayer(player, new BoredEventDto(BoredEventType.EVENT_CONNECTION_SUCCESS, MAPPER.valueToTree(session.getId())));
@@ -82,7 +82,7 @@ public class BoredGamesWsServer {
                     }
                     else {
                         session.getBasicRemote().sendText(MAPPER.writeValueAsString(new BoredEventDto(BoredEventType.EVENT_WARNING,
-                                MAPPER.valueToTree("Rejected player " + event.getPlayerName() + " as the game started already. Sorry, dude."))));
+                                MAPPER.valueToTree("Rejected player " + playerNameEvent.getPlayerName() + " as the game started already. Sorry, dude."))));
                     }
                     break;
 
@@ -111,6 +111,24 @@ public class BoredGamesWsServer {
                     theMindGame.stop();
                     broadcastEvent(BoredEventType.EVENT_GAME_STOPPED, null);
                     broadcastEvent(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
+                    break;
+
+                case EVENT_PLAY_CARD:
+                    player = theMindGame.getPlayerBySessionId(session.getId()).orElseThrow(() -> new RuntimeException("unknown sessionId"));
+                    PlayCardEvent playCardEvent = MAPPER.treeToValue(eventDto.getEvent(), PlayCardEvent.class);
+                    LOGGER.debug("player {} is playing card {} for round {}", player.getName(), playCardEvent.getCard(), playCardEvent.getRound());
+
+                    if (theMindGame.getRound() != playCardEvent.getRound()) {
+                        LOGGER.warn("We got card {} for round {}, but we are on round {}, ignoring card",
+                                playCardEvent.getCard(), playCardEvent.getRound(), theMindGame.getRound());
+                        break;
+                    }
+
+                    if (theMindGame.getPlayedCards().contains(playCardEvent.getCard())) {
+                        LOGGER.error("Card {} was already played, ignoring card", playCardEvent.getCard());
+                        break;
+                    }
+
                     break;
 
                 default:

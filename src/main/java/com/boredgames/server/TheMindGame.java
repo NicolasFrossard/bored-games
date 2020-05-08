@@ -52,7 +52,17 @@ public class TheMindGame extends Game {
             this.lives++;
     }
 
-    public void playCard() {
+    public int getRound() {
+        return round;
+    }
 
+    public ArrayList<Integer> getPlayedCards() {
+        return playedCards;
+    }
+
+    public ArrayList<Integer> playCard(int card) {
+        ArrayList<Integer> belowCards = new ArrayList<>();
+        // TODO
+        return (belowCards);
     }
 }

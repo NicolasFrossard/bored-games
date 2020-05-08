@@ -63,4 +63,8 @@ public class Player {
     public boolean isAdmin() {
         return this.isAdmin;
     }
+
+    public ArrayList<Integer> getCardsInHand() {
+        return cardsInHand;
+    }
 }
