@@ -110,15 +110,30 @@ export default {
       this.$socket.onmessage = function (event) {
         const parsed = JSON.parse(event.data);
         switch (parsed.type) {
-          case 'gameLog':
+          case 'EVENT_INFO':
             const gameLogInfo = parsed.event;
-            dashboard.logEntries.unshift(gameLogInfo);
-            if(gameLogInfo.type === 'ERROR') {
-              dashboard.$message.error(gameLogInfo.text);
-            } else if(gameLogInfo.type === 'WARN') {
-              dashboard.$message.warning(gameLogInfo.text);
-            }
+            dashboard.logEntries.unshift({type: "INFO", text: gameLogInfo});
             dashboard.highlightLatestLogEntry();
+            break;
+
+          case 'EVENT_WARNING':
+            const gameLogWarning = parsed.event;
+            dashboard.logEntries.unshift({type: "WARN", text: gameLogWarning});
+            dashboard.$message.warning(gameLogWarning);
+            dashboard.highlightLatestLogEntry();
+            break;
+
+          case 'EVENT_ERROR':
+            const gameLogError = parsed.event;
+            dashboard.logEntries.unshift({type: "ERROR", text: gameLogError});
+            dashboard.$message.error(gameLogError);
+            dashboard.highlightLatestLogEntry();
+            break;
+
+          case 'EVENT_GAME_STATE':
+            debugger
+            const gameState = parsed.event;
+            dashboard.gameState = gameState;
             break;
 
           case 'serverWarning':
@@ -126,12 +141,7 @@ export default {
             dashboard.$message.warning(message);
             break;
 
-          case 'EVENT_GAME_STATE':
-            const gameState = parsed.event;
-            dashboard.gameState = gameState;
-            break;
-
-          case 'connectionSuccessful':
+          case 'EVENT_CONNECTION_SUCCESS':
             const socketId = parsed.event
             dashboard.connectionEstablished = true;
             dashboard.mySocketId = socketId;
@@ -164,7 +174,7 @@ export default {
             dashboard.triggerCountdown();
             break;
 
-          case 'newGameStarted':
+          case 'EVENT_GAME_STARTED':
             dashboard.playStartingGame();
             dashboard.triggerCountdown();
             break;
@@ -181,10 +191,10 @@ export default {
       this.wsSend('EVENT_CONNECT_WITH_PLAYER_NAME', {playerName: this.playerName})
     },
     startTheGame: function () {
-      this.wsSend('startTheGame', {})
+      this.wsSend('EVENT_START_THE_GAME', {})
     },
     stopTheGame: function () {
-      this.wsSend('stopTheGame', {})
+      this.wsSend('EVENT_STOP_THE_GAME', {})
     },
     playCard: function (card) {
       this.wsSend('playCard', {card: card, round: this.gameState.round})
