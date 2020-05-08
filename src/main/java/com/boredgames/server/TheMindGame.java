@@ -2,7 +2,6 @@ package com.boredgames.server;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.websocket.Session;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -12,7 +11,7 @@ public class TheMindGame extends Game {
     @JsonProperty
     private int lives;
     @JsonProperty
-    private ArrayList<Integer> playedCards;
+    private final ArrayList<Integer> playedCards;
 
     public TheMindGame() {
         super();
@@ -33,7 +32,7 @@ public class TheMindGame extends Game {
 
     public void moveToNextRound() {
         ArrayList<Integer> cards = new ArrayList<Integer>();
-        IntStream.range(1, 100).forEach(card -> cards.add(card));
+        IntStream.range(1, 100).forEach(cards::add);
         Collections.shuffle(cards);
 
         this.round++;

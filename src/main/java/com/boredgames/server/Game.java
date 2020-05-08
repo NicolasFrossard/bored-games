@@ -9,7 +9,7 @@ public class Game {
     @JsonProperty
     protected GameStatus status;
     @JsonProperty
-    protected List<Player> players = new ArrayList<>();
+    protected List<Player> players = Collections.synchronizedList(new ArrayList<>());
 
     public Game() {
         this.status = GameStatus.TO_BE_STARTED;

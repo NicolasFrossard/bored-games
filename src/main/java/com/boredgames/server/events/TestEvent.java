@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TestEvent implements IBoredEvent {
 
-    private String message;
+    private final String message;
 
     @JsonCreator
     public TestEvent(@JsonProperty("message") String message) {

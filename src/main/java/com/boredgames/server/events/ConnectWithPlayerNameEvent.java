@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ConnectWithPlayerNameEvent implements IBoredEvent {
 
-    private String playerName;
+    private final String playerName;
 
     @JsonCreator
     public ConnectWithPlayerNameEvent(@JsonProperty("playerName") String playerName) {

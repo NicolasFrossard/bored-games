@@ -23,7 +23,7 @@ public class Player {
     private final boolean isAdmin;
 
     @JsonProperty
-    private ArrayList<Integer> cardsInHand;
+    private final ArrayList<Integer> cardsInHand;
 
     public Player(String name, boolean isAdmin, boolean isConnected, String socketId) {
         this.name = name;
