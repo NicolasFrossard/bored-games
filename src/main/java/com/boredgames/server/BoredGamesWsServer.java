@@ -51,15 +51,6 @@ public class BoredGamesWsServer {
         try {
             BoredEventDto eventDto = MAPPER.readValue(message, BoredEventDto.class);
             switch (eventDto.getType()) {
-                case EVENT_TEST:
-                    TestEvent testEvent = MAPPER.treeToValue(eventDto.getEvent(), TestEvent.class);
-                    String received = MAPPER.writeValueAsString(testEvent);
-                    LOGGER.info("success! we got: {}", received);
-                    session.getBasicRemote().sendText(MAPPER.writeValueAsString(eventDto));
-                    break;
-                // if we want to get the event core (if we need one, depending on the event)
-                // GetGameStateEvent event = eventDto.getEvent().orElseThrow(MissingMandatoryEventException::new);
-
                 case EVENT_GET_GAME_STATUS:
                     GameStatusEvent gameStatusEvent = new GameStatusEvent(theMindGame.getGameStatus());
                     BoredEventDto sentEventDto = new BoredEventDto(BoredEventType.EVENT_GAME_STATUS, MAPPER.valueToTree(gameStatusEvent));

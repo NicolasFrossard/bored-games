@@ -1,7 +1,6 @@
 package com.boredgames.server.events;
 
 public enum BoredEventType {
-    EVENT_TEST,
     EVENT_INFO,
     EVENT_WARNING,
     EVENT_ERROR,
