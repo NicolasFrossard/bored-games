@@ -164,6 +164,19 @@ public class BoredGamesWsServer {
                     broadcastEvent(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
                     break;
 
+                case EVENT_DELETE_PLAYER:
+                    player = theMindGame.getPlayerBySessionId(session.getId()).orElseThrow(() -> new RuntimeException("unknown sessionId"));
+                    if (!player.isAdmin()) {
+                        sendEventToPlayer(player, new BoredEventDto(BoredEventType.EVENT_WARNING,
+                                MAPPER.valueToTree("Only the admin can do that. Please don't be such a goose")));
+                        break;
+                    }
+                    DeletePlayerEvent deletePlayerEvent = MAPPER.treeToValue(eventDto.getEvent(), DeletePlayerEvent.class);
+                    theMindGame.deletePlayerByName(deletePlayerEvent.getPlayerName());
+                    broadcastEvent(BoredEventType.EVENT_INFO, MAPPER.valueToTree("Player " + deletePlayerEvent.getPlayerName() + " has been deleted"));
+                    broadcastEvent(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
+                    break;
+
                 default:
                     LOGGER.error("Unmanaged event: {}", eventDto.getType());
                     break;

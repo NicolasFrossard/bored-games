@@ -15,5 +15,6 @@ public enum BoredEventType {
     EVENT_PLAY_CARD,
     EVENT_ERROR_MADE,
     EVENT_GAME_LOST,
-    EVENT_NEW_ROUND
+    EVENT_NEW_ROUND,
+    EVENT_DELETE_PLAYER
 }

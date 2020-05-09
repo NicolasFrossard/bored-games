@@ -19,6 +19,16 @@ public class Game {
         this.players.add(p);
     }
 
+    public boolean deletePlayerByName(String name) {
+        for (Player player : this.players) {
+            if (player.getName().equals(name)) {
+                this.players.remove(player);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Optional<Player> getPlayerBySessionId(String sessionId) {
         return this.players.stream().filter(p -> p.getSocketId().equals(sessionId)).findFirst();
     }
