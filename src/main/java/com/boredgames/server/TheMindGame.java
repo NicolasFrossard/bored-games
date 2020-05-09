@@ -47,9 +47,22 @@ public class TheMindGame extends Game {
         return (this.playedCards.size() == this.round * this.players.size());
     }
 
-    public void regainOneLife() {
-        if (this.lives < this.players.size())
+    public boolean regainOneLife() {
+        if (this.lives < this.players.size()) {
             this.lives++;
+            return true;
+        }
+        return false;
+    }
+
+    public int lostOneLife() {
+        if (this.lives > 0)
+            this.lives--;
+        return (this.lives);
+    }
+
+    public int getLives() {
+        return lives;
     }
 
     public int getRound() {
@@ -62,7 +75,15 @@ public class TheMindGame extends Game {
 
     public ArrayList<Integer> playCard(int card) {
         ArrayList<Integer> belowCards = new ArrayList<>();
-        // TODO
+
+        this.playedCards.add(card);
+
+        for (Player player : this.players) {
+            for (Integer belowCard : player.playCardsInHandBelow(card)) {
+                belowCards.add(belowCard);
+                this.playedCards.add(belowCard);
+            }
+        }
         return (belowCards);
     }
 }

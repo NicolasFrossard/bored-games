@@ -129,6 +129,39 @@ public class BoredGamesWsServer {
                         break;
                     }
 
+                    broadcastEvent(BoredEventType.EVENT_INFO, MAPPER.valueToTree(player.getName() + " has played the card " + playCardEvent.getCard()));
+
+                    ArrayList<Integer> cardsInPlayerHandsThatAreBelow = theMindGame.playCard(playCardEvent.getCard());
+                    if (!cardsInPlayerHandsThatAreBelow.isEmpty()) {
+                        LOGGER.info("An error was made, cards below are {}", cardsInPlayerHandsThatAreBelow);
+                        broadcastEvent(BoredEventType.EVENT_WARNING,
+                                MAPPER.valueToTree("Dang! The following cards, still held by players, were played: " + cardsInPlayerHandsThatAreBelow.toString()));
+                        broadcastEvent(BoredEventType.EVENT_ERROR_MADE, MAPPER.valueToTree(new ErrorMadeEvent(cardsInPlayerHandsThatAreBelow)));
+
+                        if (theMindGame.lostOneLife() > 0) {
+                            broadcastEvent(BoredEventType.EVENT_INFO,
+                                    MAPPER.valueToTree("Losing one life. Lives remaining: " + String.valueOf(theMindGame.getLives())));
+                        }
+                        else {
+                            broadcastEvent(BoredEventType.EVENT_GAME_LOST, MAPPER.valueToTree(new GameLostEvent(theMindGame.getRound())));
+                            theMindGame.stop();
+                        }
+                    }
+                    else {
+                        broadcastEvent(BoredEventType.EVENT_INFO, MAPPER.valueToTree(new CardWellPlayedEvent(playCardEvent.getCard())));
+                    }
+
+                    if (theMindGame.isCurrentRoundFinished() && theMindGame.getLives() > 0) {
+                        broadcastEvent(BoredEventType.EVENT_INFO, MAPPER.valueToTree("Round " + String.valueOf(theMindGame.getRound()) + " is over, congratulations!"));
+                        theMindGame.moveToNextRound();
+                        broadcastEvent(BoredEventType.EVENT_NEW_ROUND, MAPPER.valueToTree(new NewRoundEvent(theMindGame.getRound())));
+                    }
+
+                    if (theMindGame.regainOneLife()) {
+                        broadcastEvent(BoredEventType.EVENT_INFO, MAPPER.valueToTree("You regained one ❤"));
+                    }
+
+                    broadcastEvent(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
                     break;
 
                 default:

@@ -67,4 +67,14 @@ public class Player {
     public ArrayList<Integer> getCardsInHand() {
         return cardsInHand;
     }
+
+    public ArrayList<Integer> playCardsInHandBelow(int max) {
+        ArrayList<Integer> cardsInHandBelow = new ArrayList<>();
+        for (Integer card : this.cardsInHand) {
+            if (card < max)
+                cardsInHandBelow.add(card);
+        }
+        return cardsInHandBelow;
+    }
+
 }
