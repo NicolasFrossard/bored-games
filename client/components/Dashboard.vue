@@ -131,7 +131,6 @@ export default {
             break;
 
           case 'EVENT_GAME_STATE':
-            debugger
             const gameState = parsed.event;
             dashboard.gameState = gameState;
             break;
