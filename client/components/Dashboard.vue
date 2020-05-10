@@ -131,7 +131,6 @@ export default {
             break;
 
           case 'EVENT_GAME_STATE':
-            debugger
             const gameState = parsed.event;
             dashboard.gameState = gameState;
             break;
@@ -147,14 +146,14 @@ export default {
             dashboard.mySocketId = socketId;
             break;
 
-          case 'gameLost':
+          case 'EVENT_GAME_LOST':
             const round = parsed.event
             dashboard.playSoundLostGame();
             dashboard.gameOverRoundAchieved = round;
             dashboard.gameOverDialogVisible = true;
             break;
 
-          case 'errorMade':
+          case 'EVENT_ERROR_MADE':
             const cards = parsed.event
             dashboard.playSoundErrorMade();
             dashboard.flipCards(cards);
@@ -167,7 +166,7 @@ export default {
             dashboard.flipCards([card]);
             break;
 
-          case 'newRound':
+          case 'EVENT_NEW_ROUND':
             const newRound = parsed.event
             dashboard.$message.info(`Starting round ${newRound}`);
             dashboard.playSoundNewRound();
@@ -197,10 +196,10 @@ export default {
       this.wsSend('EVENT_STOP_THE_GAME', {})
     },
     playCard: function (card) {
-      this.wsSend('playCard', {card: card, round: this.gameState.round})
+      this.wsSend('EVENT_PLAY_CARD', {card: card, round: this.gameState.round})
     },
     deletePlayer: function (playerName) {
-      this.wsSend('deletePlayer', playerName)
+      this.wsSend('EVENT_DELETE_PLAYER', playerName)
     },
     getGameState: function () {
       this.wsSend('EVENT_GET_GAME_STATE', {})
