@@ -38,7 +38,7 @@ public class TheMindGame extends Game {
         this.round++;
         this.cardsPlayed.clear();
 
-        for (int i = 0; i <= this.round && cards.size() >= this.players.size(); i++) {
+        for (int i = 0; i < this.round && cards.size() >= this.players.size(); i++) {
             this.players.forEach(player -> player.giveCard(cards.remove(0)));
         }
     }
