@@ -131,6 +131,7 @@ export default {
             break;
 
           case 'EVENT_GAME_STATE':
+            debugger
             const gameState = parsed.event;
             dashboard.gameState = gameState;
             break;
@@ -199,7 +200,7 @@ export default {
       this.wsSend('EVENT_PLAY_CARD', {card: card, round: this.gameState.round})
     },
     deletePlayer: function (playerName) {
-      this.wsSend('EVENT_DELETE_PLAYER', playerName)
+      this.wsSend('EVENT_DELETE_PLAYER', {playerName: playerName})
     },
     getGameState: function () {
       this.wsSend('EVENT_GET_GAME_STATE', {})

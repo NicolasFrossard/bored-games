@@ -124,7 +124,7 @@ public class BoredGamesWsServer {
                         break;
                     }
 
-                    if (theMindGame.getPlayedCards().contains(playCardEvent.getCard())) {
+                    if (theMindGame.getCardsPlayed().contains(playCardEvent.getCard())) {
                         LOGGER.error("Card {} was already played, ignoring card", playCardEvent.getCard());
                         break;
                     }

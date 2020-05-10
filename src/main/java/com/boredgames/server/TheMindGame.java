@@ -11,13 +11,13 @@ public class TheMindGame extends Game {
     @JsonProperty
     private int lives;
     @JsonProperty
-    private final ArrayList<Integer> playedCards;
+    private final ArrayList<Integer> cardsPlayed;
 
     public TheMindGame() {
         super();
         this.round = 0;
         this.lives = 0;
-        this.playedCards = new ArrayList<Integer>();
+        this.cardsPlayed = new ArrayList<Integer>();
     }
 
     public void start() {
@@ -36,7 +36,7 @@ public class TheMindGame extends Game {
         Collections.shuffle(cards);
 
         this.round++;
-        this.playedCards.clear();
+        this.cardsPlayed.clear();
 
         for (int i = 0; i <= this.round && cards.size() >= this.players.size(); i++) {
             this.players.forEach(player -> player.giveCard(cards.remove(0)));
@@ -44,7 +44,7 @@ public class TheMindGame extends Game {
     }
 
     public boolean isCurrentRoundFinished() {
-        return (this.playedCards.size() == this.round * this.players.size());
+        return (this.cardsPlayed.size() == this.round * this.players.size());
     }
 
     public boolean regainOneLife() {
@@ -69,19 +69,19 @@ public class TheMindGame extends Game {
         return round;
     }
 
-    public ArrayList<Integer> getPlayedCards() {
-        return playedCards;
+    public ArrayList<Integer> getCardsPlayed() {
+        return cardsPlayed;
     }
 
     public ArrayList<Integer> playCard(int card) {
         ArrayList<Integer> belowCards = new ArrayList<>();
 
-        this.playedCards.add(card);
+        this.cardsPlayed.add(card);
 
         for (Player player : this.players) {
             for (Integer belowCard : player.playCardsInHandBelow(card)) {
                 belowCards.add(belowCard);
-                this.playedCards.add(belowCard);
+                this.cardsPlayed.add(belowCard);
             }
         }
         return (belowCards);
