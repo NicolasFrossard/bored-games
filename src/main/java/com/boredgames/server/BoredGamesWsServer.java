@@ -148,7 +148,7 @@ public class BoredGamesWsServer {
                         }
                     }
                     else {
-                        broadcastEvent(BoredEventType.EVENT_INFO, MAPPER.valueToTree(new CardWellPlayedEvent(playCardEvent.getCard())));
+                        broadcastEvent(BoredEventType.EVENT_CARD_WELL_PLAYED, MAPPER.valueToTree(new CardWellPlayedEvent(playCardEvent.getCard())));
                     }
 
                     if (theMindGame.isCurrentRoundFinished() && theMindGame.getLives() > 0) {
