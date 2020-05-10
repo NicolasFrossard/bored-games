@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class Player {
 
@@ -23,14 +24,14 @@ public class Player {
     private final boolean isAdmin;
 
     @JsonProperty
-    private final ArrayList<Integer> cardsInHand;
+    private final SortedSet<Integer> cardsInHand;
 
     public Player(String name, boolean isAdmin, boolean isConnected, String socketId) {
         this.name = name;
         this.isAdmin = isAdmin;
         this.socketId = socketId;
         this.isConnected = isConnected;
-        this.cardsInHand = new ArrayList<Integer>();
+        this.cardsInHand = new TreeSet<>();
         LOGGER.debug("New player {}-{}-{}-{}", name, isAdmin, socketId, isConnected);
     }
 
@@ -64,17 +65,16 @@ public class Player {
         return this.isAdmin;
     }
 
-    public ArrayList<Integer> getCardsInHand() {
+    public SortedSet<Integer> getCardsInHand() {
         return cardsInHand;
     }
 
-    public ArrayList<Integer> playCardsInHandBelow(int max) {
-        ArrayList<Integer> cardsInHandBelow = new ArrayList<>();
+    public SortedSet<Integer> playCardsInHandBelow(int max) {
+        SortedSet<Integer> cardsInHandBelow = new TreeSet<>();
         for (Integer card : this.cardsInHand) {
             if (card < max)
                 cardsInHandBelow.add(card);
         }
         return cardsInHandBelow;
     }
-
 }
