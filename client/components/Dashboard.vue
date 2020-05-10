@@ -159,7 +159,7 @@ export default {
             dashboard.flipCards(cards);
             break;
 
-          case 'cardWellPlayed':
+          case 'EVENT_CARD_WELL_PLAYED':
             const card = parsed.event
             dashboard.playSoundCardPlayed();
             dashboard.highlightLastCardPlayed();
