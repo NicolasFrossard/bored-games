@@ -69,12 +69,22 @@ public class Player {
         return cardsInHand;
     }
 
+    public boolean playCard(int card) {
+        return (this.cardsInHand.remove(card));
+    }
+
     public SortedSet<Integer> playCardsInHandBelow(int max) {
         SortedSet<Integer> cardsInHandBelow = new TreeSet<>();
         for (Integer card : this.cardsInHand) {
-            if (card < max)
+            if (card < max) {
                 cardsInHandBelow.add(card);
+                this.playCard(card);
+            }
         }
         return cardsInHandBelow;
+    }
+
+    public void dropAllCardsInHand() {
+        this.cardsInHand.clear();
     }
 }

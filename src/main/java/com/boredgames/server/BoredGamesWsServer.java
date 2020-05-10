@@ -131,7 +131,7 @@ public class BoredGamesWsServer {
 
                     broadcastEvent(BoredEventType.EVENT_INFO, MAPPER.valueToTree(player.getName() + " has played the card " + playCardEvent.getCard()));
 
-                    ArrayList<Integer> cardsInPlayerHandsThatAreBelow = theMindGame.playCard(playCardEvent.getCard());
+                    ArrayList<Integer> cardsInPlayerHandsThatAreBelow = theMindGame.playCard(player, playCardEvent.getCard());
                     if (!cardsInPlayerHandsThatAreBelow.isEmpty()) {
                         LOGGER.info("An error was made, cards below are {}", cardsInPlayerHandsThatAreBelow);
                         broadcastEvent(BoredEventType.EVENT_WARNING,
@@ -155,10 +155,10 @@ public class BoredGamesWsServer {
                         broadcastEvent(BoredEventType.EVENT_INFO, MAPPER.valueToTree("Round " + String.valueOf(theMindGame.getRound()) + " is over, congratulations!"));
                         theMindGame.moveToNextRound();
                         broadcastEvent(BoredEventType.EVENT_NEW_ROUND, MAPPER.valueToTree(new NewRoundEvent(theMindGame.getRound())));
-                    }
 
-                    if (theMindGame.regainOneLife()) {
-                        broadcastEvent(BoredEventType.EVENT_INFO, MAPPER.valueToTree("You regained one ❤"));
+                        if (theMindGame.regainOneLife()) {
+                            broadcastEvent(BoredEventType.EVENT_INFO, MAPPER.valueToTree("You regained one ❤"));
+                        }
                     }
 
                     broadcastEvent(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
@@ -172,9 +172,10 @@ public class BoredGamesWsServer {
                         break;
                     }
                     DeletePlayerEvent deletePlayerEvent = MAPPER.treeToValue(eventDto.getEvent(), DeletePlayerEvent.class);
-                    theMindGame.deletePlayerByName(deletePlayerEvent.getPlayerName());
-                    broadcastEvent(BoredEventType.EVENT_INFO, MAPPER.valueToTree("Player " + deletePlayerEvent.getPlayerName() + " has been deleted"));
-                    broadcastEvent(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
+                    if (theMindGame.deletePlayerByName(deletePlayerEvent.getPlayerName())) {
+                        broadcastEvent(BoredEventType.EVENT_INFO, MAPPER.valueToTree("Player " + deletePlayerEvent.getPlayerName() + " has been deleted"));
+                        broadcastEvent(BoredEventType.EVENT_GAME_STATE, MAPPER.valueToTree(theMindGame));
+                    }
                     break;
 
                 default:

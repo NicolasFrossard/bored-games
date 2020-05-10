@@ -47,6 +47,7 @@ public class Game {
 
     public void stop() {
         this.status = GameStatus.TO_BE_STARTED;
+        this.players.forEach(Player::dropAllCardsInHand);
     }
 
     public GameStatus getStatus() {

@@ -28,6 +28,8 @@ public class TheMindGame extends Game {
     public void stop() {
         super.stop();
         this.round = 0;
+        this.lives = 0;
+        this.cardsPlayed.clear();
     }
 
     public void moveToNextRound() {
@@ -73,13 +75,14 @@ public class TheMindGame extends Game {
         return cardsPlayed;
     }
 
-    public ArrayList<Integer> playCard(int card) {
+    public ArrayList<Integer> playCard(Player player, int card) {
         ArrayList<Integer> belowCards = new ArrayList<>();
 
+        player.playCard(card);
         this.cardsPlayed.add(card);
 
-        for (Player player : this.players) {
-            for (Integer belowCard : player.playCardsInHandBelow(card)) {
+        for (Player p : this.players) {
+            for (Integer belowCard : p.playCardsInHandBelow(card)) {
                 belowCards.add(belowCard);
                 this.cardsPlayed.add(belowCard);
             }
